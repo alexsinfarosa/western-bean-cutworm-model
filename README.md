@@ -1,1 +1,1 @@
-# NEWA Western Bean Cutworm
+# NEWA Cranberry FruitWorm Model
