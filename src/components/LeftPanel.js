@@ -110,7 +110,6 @@ class LeftPanel extends Component {
           onSubmit={this.handleSubmit}
         >
           {/* state */}
-
           <FormControl className={classes.formControl}>
             <InputLabel htmlFor="statePC">
               State<IconButton

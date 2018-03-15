@@ -3,10 +3,7 @@ import states from "../assets/states.json";
 import axios from "axios";
 
 // utils
-import {
-  michiganIdAdjustment,
-  networkTemperatureAdjustment
-} from "../utils/utils";
+import { idAdjustment, networkTemperatureAdjustment } from "../utils/utils";
 
 // date-fns
 import { format, startOfYear } from "date-fns";
@@ -128,7 +125,7 @@ export default class ParamsStore {
   get params() {
     if (this.station) {
       return {
-        sid: `${michiganIdAdjustment(this.station)} ${this.station.network}`,
+        sid: `${idAdjustment(this.station)} ${this.station.network}`,
         sdate: format(startOfYear(this.edate), "YYYY-MM-DD"),
         edate: format(this.edate, "YYYY-MM-DD"),
         elems: networkTemperatureAdjustment(this.station.network),
@@ -137,6 +134,11 @@ export default class ParamsStore {
       };
     }
   }
+
+  setStateStationFromMap = station => {
+    this.postalCode = station.state;
+    this.stationID = station.id;
+  };
 }
 
 decorate(ParamsStore, {
@@ -157,5 +159,6 @@ decorate(ParamsStore, {
   asJson: computed,
   readFromLocalstorage: action,
   disableCalculateButton: computed,
-  params: computed
+  params: computed,
+  setStateStationFromMap: action
 });

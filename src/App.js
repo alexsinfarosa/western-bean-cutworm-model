@@ -9,14 +9,15 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  Typography
+  Typography,
+  Modal
 } from "material-ui";
 import MenuIcon from "material-ui-icons/Menu";
 
 // components
 import LeftPanel from "./components/LeftPanel";
 // import GDDTable from "./components/GDDTable";
-// import USMap from "./components/USMap";
+import USMap from "./components/USMap";
 
 const drawerWidth = 250;
 const styles = theme => ({
@@ -70,7 +71,8 @@ const styles = theme => ({
 class App extends Component {
   state = {
     isLoading: false,
-    mobileOpen: false
+    mobileOpen: false,
+    isModalOpen: false
   };
 
   handleDrawerToggle = () => {
@@ -79,6 +81,10 @@ class App extends Component {
 
   closeDrawer = () => {
     this.setState({ mobileOpen: false });
+  };
+
+  toggleModal = () => {
+    this.setState({ isModalOpen: !this.state.isModalOpen });
   };
 
   render() {
@@ -124,7 +130,6 @@ class App extends Component {
               keepMounted: true // Better open performance on mobile.
             }}
           >
-            B
             {/*<LeftPanel
               stations={this.state.stations}
               loadData={this.loadData}
@@ -145,10 +150,26 @@ class App extends Component {
             <LeftPanel
               // loadData={this.loadData}
               closeDrawer={this.closeDrawer}
-              // toggleModal={this.toggleModal}
+              toggleModal={this.toggleModal}
             />
           </Drawer>
         </Hidden>
+
+        {/* US map */}
+        <Modal
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+          open={this.state.isModalOpen}
+          onClose={this.toggleModal}
+        >
+          <div className={classes.modal}>
+            <USMap
+              params={this.state.params}
+              stations={this.state.stations}
+              toggleModal={this.toggleModal}
+            />
+          </div>
+        </Modal>
       </div>
     );
   }
