@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { inject, observer } from "mobx-react";
 
 import { withStyles } from "material-ui/styles";
@@ -16,7 +16,7 @@ import MenuIcon from "material-ui-icons/Menu";
 
 // components
 import LeftPanel from "./components/LeftPanel";
-// import GDDTable from "./components/GDDTable";
+import GDDTable from "./components/GDDTable";
 import USMap from "./components/USMap";
 
 const drawerWidth = 250;
@@ -89,6 +89,8 @@ class App extends Component {
 
   render() {
     const { classes } = this.props;
+    const { data } = this.props.rootStore.paramsStore;
+
     return (
       <div className={classes.root}>
         <AppBar className={classes.appBar}>
@@ -154,6 +156,15 @@ class App extends Component {
             />
           </Drawer>
         </Hidden>
+
+        {/* main content */}
+        <main className={classes.content}>
+          {data.length !== 0 && (
+            <Fragment>
+              <GDDTable />
+            </Fragment>
+          )}
+        </main>
 
         {/* US map */}
         <Modal

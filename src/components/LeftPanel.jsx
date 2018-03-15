@@ -9,7 +9,7 @@ import { MenuItem } from "material-ui/Menu";
 import { FormControl } from "material-ui/Form";
 import {
   Select,
-  Button,
+  // Button,
   IconButton,
   Typography,
   Icon,
@@ -55,6 +55,12 @@ const styles = theme => ({
 });
 
 class LeftPanel extends Component {
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.closeDrawer();
+    console.log(this.props.rootStore.paramsStore.params);
+  };
+
   render() {
     const { classes } = this.props;
     const {
@@ -67,12 +73,9 @@ class LeftPanel extends Component {
       edate,
       setEDate,
       bioFix,
-      setBioFix,
-      disableCalculateButton,
-      params
+      setBioFix
+      // disableCalculateButton
     } = this.props.rootStore.paramsStore;
-
-    // console.log(params);
 
     const stateList = states.map(state => (
       <MenuItem key={state.postalCode} value={state.postalCode}>
@@ -200,7 +203,7 @@ class LeftPanel extends Component {
             />
           </FormControl>
 
-          <Button
+          {/*<Button
             variant="raised"
             color="primary"
             className={classes.formControl}
@@ -208,7 +211,7 @@ class LeftPanel extends Component {
             disabled={disableCalculateButton}
           >
             Calculate
-          </Button>
+          </Button>*/}
         </form>
       </Fragment>
     );

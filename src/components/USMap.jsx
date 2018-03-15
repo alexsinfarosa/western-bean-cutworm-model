@@ -20,11 +20,6 @@ const styles = theme => ({
     width: "100%",
     height: "100%",
     marginTop: theme.spacing.unit * 4
-  },
-  state: {
-    color: "#ff7800",
-    weight: 5,
-    opacity: 0.65
   }
 });
 

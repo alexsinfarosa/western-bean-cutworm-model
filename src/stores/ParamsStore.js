@@ -8,6 +8,11 @@ import { idAdjustment, networkTemperatureAdjustment } from "../utils/utils";
 // date-fns
 import { format, startOfYear } from "date-fns";
 
+// fetch
+import fetchData from "../utils/fetchData";
+import cleanFetchedData from "../utils/cleanFetchedData";
+import transformData from "../utils/transformData";
+
 // const
 const url = `${
   window.location.protocol
@@ -23,6 +28,11 @@ export default class ParamsStore {
         this.readFromLocalstorage();
         reaction(() => this.asJson, json => this.writeToLocalstorage(json));
       }
+    );
+
+    reaction(
+      () => this.asJson,
+      () => (this.stationID === "" ? null : this.setData(this.params))
     );
   }
 
@@ -51,7 +61,7 @@ export default class ParamsStore {
     this.postalCode = station.state;
   };
   get station() {
-    return this.stations.find(station => station.state === this.postalCode);
+    return this.stations.find(station => station.id === this.stationID);
   }
   stations = [];
   setStations = d => (this.stations = d);
@@ -118,10 +128,6 @@ export default class ParamsStore {
     };
   }
 
-  get disableCalculateButton() {
-    return this.stationID === "";
-  }
-
   get params() {
     if (this.station) {
       return {
@@ -138,6 +144,24 @@ export default class ParamsStore {
   setStateStationFromMap = station => {
     this.postalCode = station.state;
     this.stationID = station.id;
+  };
+
+  data = [];
+  setData = async params => {
+    this.isLoading = true;
+
+    // fetching data
+    const acisData = await fetchData(params).then(res => res);
+    // console.log(acisData);
+
+    // clean and replacements
+    const cleanedData = await cleanFetchedData(acisData, params.edate);
+
+    // transform data
+    const transformedData = await transformData(cleanedData, params.bioFix);
+
+    this.data = transformedData;
+    this.isLoading = false;
   };
 }
 
@@ -158,7 +182,8 @@ decorate(ParamsStore, {
   setBioFix: action,
   asJson: computed,
   readFromLocalstorage: action,
-  disableCalculateButton: computed,
   params: computed,
-  setStateStationFromMap: action
+  setStateStationFromMap: action,
+  data: observable,
+  setData: action
 });
