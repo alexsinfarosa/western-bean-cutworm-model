@@ -12,7 +12,7 @@ import { matchIconsToStations } from "../utils/utils";
 import { withStyles } from "material-ui/styles";
 import withRoot from "../withRoot";
 import Paper from "material-ui/Paper";
-import pink from "material-ui/colors/pink";
+import green from "material-ui/colors/green";
 
 // styles
 const styles = theme => ({
@@ -51,6 +51,7 @@ class USMap extends Component {
     const { setStateStationFromMap } = this.props.rootStore.paramsStore;
     setStateStationFromMap(station);
     this.props.toggleModal();
+    this.props.closeDrawer();
   };
 
   render() {
@@ -93,7 +94,7 @@ class USMap extends Component {
             <GeoJSON
               data={this.state.geojson}
               style={{
-                color: pink[300],
+                color: green[400],
                 weight: 1
                 // opacity: 0.65
               }}

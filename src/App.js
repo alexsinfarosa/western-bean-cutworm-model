@@ -51,20 +51,15 @@ const styles = theme => ({
   content: {
     flexGrow: 1,
     flexShrink: 1,
-    // backgroundColor: "#fff",
+    backgroundColor: "#E7ECF0",
     paddingLeft: theme.spacing.unit * 1.5,
     paddingRight: theme.spacing.unit * 1.5,
     paddingTop: theme.spacing.unit * 8,
-    maxWidth: 1200,
     margin: "0 auto"
   },
   link: {
     color: "#fff",
     textDecoration: "none"
-  },
-  modal: {
-    width: "100%",
-    height: "50vh"
   }
 });
 
@@ -96,15 +91,15 @@ class App extends Component {
         <AppBar className={classes.appBar}>
           <Toolbar>
             <IconButton
-              color="inherit"
+              style={{ color: "white" }}
               aria-label="open drawer"
               onClick={this.handleDrawerToggle}
               className={classes.navIconHide}
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="title" color="inherit" noWrap>
-              Cranberry Fruitworm Model
+            <Typography variant="title" noWrap style={{ color: "white" }}>
+              Western Bean Cutworm Model
             </Typography>
             <Typography variant="subheading" style={{ marginLeft: "auto" }}>
               <a
@@ -132,12 +127,10 @@ class App extends Component {
               keepMounted: true // Better open performance on mobile.
             }}
           >
-            {/*<LeftPanel
-              stations={this.state.stations}
-              loadData={this.loadData}
+            <LeftPanel
               closeDrawer={this.closeDrawer}
               toggleModal={this.toggleModal}
-            />*/}
+            />
           </Drawer>
         </Hidden>
 
@@ -150,7 +143,6 @@ class App extends Component {
             }}
           >
             <LeftPanel
-              // loadData={this.loadData}
               closeDrawer={this.closeDrawer}
               toggleModal={this.toggleModal}
             />
@@ -167,17 +159,25 @@ class App extends Component {
         </main>
 
         {/* US map */}
+
         <Modal
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
+          disableAutoFocus={true}
           open={this.state.isModalOpen}
           onClose={this.toggleModal}
+          style={{
+            width: "100%",
+            height: "50%",
+            margin: "100px auto"
+          }}
         >
-          <div className={classes.modal}>
+          <div style={{ width: "100%", height: "100%" }}>
             <USMap
               params={this.state.params}
               stations={this.state.stations}
               toggleModal={this.toggleModal}
+              closeDrawer={this.closeDrawer}
             />
           </div>
         </Modal>

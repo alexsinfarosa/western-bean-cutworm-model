@@ -6,6 +6,7 @@ import registerServiceWorker from "./registerServiceWorker";
 
 // material-ui picker
 import DateFnsUtils from "material-ui-pickers/utils/date-fns-utils";
+import enLocale from "date-fns/locale/en-US";
 import MuiPickersUtilsProvider from "material-ui-pickers/utils/MuiPickersUtilsProvider";
 
 // Mobx
@@ -16,7 +17,7 @@ const rootStore = new RootStore(fetcher);
 
 ReactDOM.render(
   <Provider rootStore={rootStore}>
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={enLocale}>
       <App />
     </MuiPickersUtilsProvider>
   </Provider>,

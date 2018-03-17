@@ -6,12 +6,12 @@ import axios from "axios";
 import { idAdjustment, networkTemperatureAdjustment } from "../utils/utils";
 
 // date-fns
-import { format, startOfYear } from "date-fns";
+import { format, startOfYear, isSameYear, isAfter, addDays } from "date-fns";
 
 // fetch
 import fetchData from "../utils/fetchData";
 import cleanFetchedData from "../utils/cleanFetchedData";
-import transformData from "../utils/transformData";
+import currentModel from "../utils/currentModel";
 
 // const
 const url = `${
@@ -88,13 +88,17 @@ export default class ParamsStore {
     }
   }
 
-  //   edate
-  edate = new Date();
-  setEDate = d => (this.edate = d);
+  //   date of interest
+  dateOfInterest = new Date();
+  setDateOfInterest = d => (this.dateOfInterest = d);
 
   //   bioFix
   bioFix = null;
-  setBioFix = d => (this.bioFix = d);
+  setBioFix = d => {
+    isAfter(new Date(d), this.dateOfInterest)
+      ? (this.bioFix = this.dateOfInterest)
+      : (this.bioFix = d);
+  };
 
   //   localstorage
   writeToLocalstorage = json => {
@@ -113,7 +117,7 @@ export default class ParamsStore {
       if (Object.keys(params).length !== 0) {
         this.postalCode = params.postalCode;
         this.stationID = params.stationID;
-        this.eDate = params.edate;
+        this.dateOfInterest = params.dateOfInterest;
         this.bioFix = params.bioFix;
       }
     }
@@ -123,20 +127,30 @@ export default class ParamsStore {
     return {
       postalCode: this.postalCode,
       stationID: this.stationID,
-      edate: this.edate,
+      dateOfInterest: this.dateOfInterest,
       bioFix: this.bioFix
     };
+  }
+
+  get edate() {
+    if (isSameYear(new Date(), new Date(this.dateOfInterest))) {
+      // if current year fetch data up to today
+      return format(new Date(), "YYYY-MM-DD");
+    } else {
+      // if NOT current year fetch data up to date of interest + 5 days
+      // +5 days to make the table the same as when current year
+      return format(addDays(this.dateOfInterest, 5), "YYYY-MM-DD");
+    }
   }
 
   get params() {
     if (this.station) {
       return {
         sid: `${idAdjustment(this.station)} ${this.station.network}`,
-        sdate: format(startOfYear(this.edate), "YYYY-MM-DD"),
-        edate: format(this.edate, "YYYY-MM-DD"),
+        sdate: format(startOfYear(this.dateOfInterest), "YYYY-MM-DD"),
+        edate: this.edate,
         elems: networkTemperatureAdjustment(this.station.network),
-        meta: "tzo",
-        bioFix: this.bioFix ? format(this.bioFix, "YYYY-MM-DD") : null
+        meta: "tzo"
       };
     }
   }
@@ -147,22 +161,30 @@ export default class ParamsStore {
   };
 
   data = [];
+  missingDays = [];
   setData = async params => {
     this.isLoading = true;
 
     // fetching data
     const acisData = await fetchData(params).then(res => res);
-    // console.log(acisData);
 
     // clean and replacements
-    const cleanedData = await cleanFetchedData(acisData, params.edate);
+    const cleanedData = await cleanFetchedData(acisData, this.asJson);
 
-    // transform data
-    const transformedData = await transformData(cleanedData, params.bioFix);
+    // transform data based on current model
+    const { results, missingDays } = await currentModel(
+      cleanedData,
+      this.asJson
+    );
 
-    this.data = transformedData;
+    this.data = results;
+    this.missingDays = missingDays;
     this.isLoading = false;
   };
+
+  get dataForTable() {
+    return this.data.slice(-8);
+  }
 }
 
 decorate(ParamsStore, {
@@ -176,8 +198,9 @@ decorate(ParamsStore, {
   stations: observable,
   setStations: action,
   filteredStationList: computed,
-  edate: observable,
-  setEDate: action,
+  dateOfInterest: observable,
+  setDateOfInterest: action,
+  edate: computed,
   bioFix: observable,
   setBioFix: action,
   asJson: computed,
@@ -185,5 +208,7 @@ decorate(ParamsStore, {
   params: computed,
   setStateStationFromMap: action,
   data: observable,
-  setData: action
+  missingDays: observable,
+  setData: action,
+  dataForTable: computed
 });

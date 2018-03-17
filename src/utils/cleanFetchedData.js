@@ -1,7 +1,7 @@
 import { replaceNonConsecutiveMissingValues } from "./utils";
 import { isSameYear } from "date-fns";
 
-export default (acisData, edate) => {
+export default (acisData, asJson) => {
   const currentStn = acisData.get("currentStn");
 
   if (currentStn.length !== 0) {
@@ -19,7 +19,7 @@ export default (acisData, edate) => {
         tempArr = tempArr.map((t, j) => (t === "M" ? sisterStn[i][1][j] : t));
       }
 
-      if (isSameYear(new Date(), new Date(edate))) {
+      if (isSameYear(new Date(), new Date(asJson.dateOfInterest))) {
         const forecast = acisData.get("forecast");
         if (forecast.length !== 0) {
           lastFiveDays = forecast.slice(-5);
@@ -32,7 +32,7 @@ export default (acisData, edate) => {
       results.set(el[0], tempArr);
     });
 
-    if (isSameYear(new Date(), new Date(edate))) {
+    if (isSameYear(new Date(), new Date(asJson.dateOfInterest))) {
       lastFiveDays.forEach(dayArr => {
         results.set(dayArr[0], dayArr[1].map(d => d.toString()));
       });

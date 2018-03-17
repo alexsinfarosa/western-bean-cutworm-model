@@ -9,16 +9,16 @@ import { MenuItem } from "material-ui/Menu";
 import { FormControl } from "material-ui/Form";
 import {
   Select,
-  // Button,
   IconButton,
+  Button,
   Typography,
   Icon,
   InputAdornment
 } from "material-ui";
 import PlaceIcon from "material-ui-icons/Place";
 
-// picker
-import { DatePicker } from "material-ui-pickers";
+// Date picker
+import DatePicker from "material-ui-pickers/DatePicker";
 
 const styles = theme => ({
   root: {
@@ -51,16 +51,14 @@ const styles = theme => ({
   link: {
     color: "#a52c25",
     textDecoration: "none"
+  },
+  iconMap: {
+    margin: "0 auto",
+    marginTop: theme.spacing.unit * 2
   }
 });
 
 class LeftPanel extends Component {
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.closeDrawer();
-    console.log(this.props.rootStore.paramsStore.params);
-  };
-
   render() {
     const { classes } = this.props;
     const {
@@ -70,11 +68,10 @@ class LeftPanel extends Component {
       stationID,
       setStationID,
       filteredStationList,
-      edate,
-      setEDate,
+      dateOfInterest,
+      setDateOfInterest,
       bioFix,
       setBioFix
-      // disableCalculateButton
     } = this.props.rootStore.paramsStore;
 
     const stateList = states.map(state => (
@@ -107,6 +104,17 @@ class LeftPanel extends Component {
           </Typography>
         </div>
 
+        <Button
+          variant="fab"
+          mini
+          onClick={this.props.toggleModal}
+          aria-label="map"
+          color="primary"
+          className={classes.iconMap}
+        >
+          <PlaceIcon />
+        </Button>
+
         <form
           className={classes.root}
           autoComplete="off"
@@ -114,30 +122,16 @@ class LeftPanel extends Component {
         >
           {/* state */}
           <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="statePC">
-              State<IconButton
-                onClick={this.props.toggleModal}
-                aria-label="map"
-                color="primary"
-                style={{
-                  margin: 0,
-                  padding: 0,
-                  fontSize: 30,
-                  marginBottom: 10
-                }}
-              >
-                <PlaceIcon />
-              </IconButton>
-            </InputLabel>
-            <br />
+            <InputLabel htmlFor="postalCode">State</InputLabel>
+
             <Select
-              style={{ marginTop: 10 }}
+              // style={{ marginTop: 10 }}
               autoWidth={true}
               value={postalCode}
               onChange={setPostalCode}
               inputProps={{
-                name: "statePC",
-                id: "statePC"
+                name: "postalCode",
+                id: "postalCode"
               }}
             >
               {stateList}
@@ -146,72 +140,74 @@ class LeftPanel extends Component {
 
           {/* station */}
           <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="station">
+            <InputLabel htmlFor="stationID">
               Station ({stationList.length})
             </InputLabel>
             <Select
               autoWidth={true}
               value={stationID}
-              onChange={setStationID}
+              onChange={e => {
+                setStationID(e);
+                this.props.closeDrawer();
+              }}
               inputProps={{
-                name: "station",
-                id: "station"
+                name: "stationID",
+                id: "stationID"
               }}
             >
               {stationList}
             </Select>
           </FormControl>
 
-          <FormControl className={classes.formControl}>
+          {/* date of interest */}
+          <div className={classes.formControl}>
             <DatePicker
+              style={{ width: "100%" }}
               label="Date of Interest"
-              maxDateMessage="Date must be less than today"
-              value={edate}
-              onChange={setEDate}
-              format="MMMM Do YYYY"
-              disableFuture={true}
+              value={dateOfInterest}
+              onChange={e => {
+                setDateOfInterest(e);
+                this.props.closeDrawer();
+              }}
+              format="MMMM Do, YYYY"
+              disableFuture
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton>
+                    <IconButton style={{ marginRight: -8 }}>
                       <Icon>date_range</Icon>
                     </IconButton>
                   </InputAdornment>
                 )
               }}
             />
-          </FormControl>
+          </div>
 
-          <FormControl className={classes.formControl}>
+          {/* bioFix */}
+          <div className={classes.formControl}>
             <DatePicker
+              style={{ width: "100%" }}
               label="BioFix Date"
               // helperText="Possible manual entry via keyboard"
               maxDateMessage="Date must be less than date of interest"
               value={bioFix}
-              onChange={setBioFix}
-              format="MMMM Do YYYY"
+              onChange={e => {
+                setBioFix(e);
+                this.props.closeDrawer();
+              }}
+              format="MMMM Do, YYYY"
               disableFuture={true}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton>
+                    <IconButton style={{ marginRight: -8 }}>
                       <Icon>date_range</Icon>
                     </IconButton>
                   </InputAdornment>
                 )
               }}
             />
-          </FormControl>
-
-          {/*<Button
-            variant="raised"
-            color="primary"
-            className={classes.formControl}
-            type="submit"
-            disabled={disableCalculateButton}
-          >
-            Calculate
-          </Button>*/}
+          </div>
         </form>
       </Fragment>
     );

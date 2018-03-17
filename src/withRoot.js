@@ -1,7 +1,7 @@
 import React from "react";
 import { MuiThemeProvider, createMuiTheme } from "material-ui/styles";
-import pink from "material-ui/colors/pink";
-import teal from "material-ui/colors/teal";
+import green from "material-ui/colors/green";
+import indigo from "material-ui/colors/indigo";
 // import Reboot from "material-ui/Reboot";
 
 // A theme with custom primary and secondary color.
@@ -9,14 +9,14 @@ import teal from "material-ui/colors/teal";
 const theme = createMuiTheme({
   palette: {
     primary: {
-      light: pink[300],
-      main: pink[500],
-      dark: pink[700]
+      light: green[300],
+      main: green[500],
+      dark: green[700]
     },
     secondary: {
-      light: teal[300],
-      main: teal[500],
-      dark: teal[700]
+      light: indigo[300],
+      main: indigo[500],
+      dark: indigo[700]
     }
   }
 });
