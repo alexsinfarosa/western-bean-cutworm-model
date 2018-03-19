@@ -12,12 +12,15 @@ import indigo from "material-ui/colors/indigo";
 const styles = theme => ({
   root: {
     width: "100%",
-    marginTop: theme.spacing.unit * 4,
+    marginTop: theme.spacing.unit * 1,
     height: 80,
     color: "#6A6C6E",
     display: "flex",
     justifyContent: "space-around",
-    alignItems: "center"
+    alignItems: "center",
+    "@media (min-width: 576px)": {
+      marginTop: theme.spacing.unit * 2
+    }
   },
   circle: {
     width: 80
@@ -30,6 +33,7 @@ const styles = theme => ({
   },
   header: {
     fontSize: "1rem",
+    color: "black",
     "@media (min-width: 576px)": {
       fontSize: "1.5rem"
     }
@@ -47,7 +51,7 @@ class Header extends Component {
     return (
       <div className={classes.root}>
         <Typography variant="display1" className={classes.header}>
-          Western Bean Cutworm results for {station.name}, {station.state}
+          Results for {station.name}, {station.state}
         </Typography>
         <div className={classes.circle}>
           <CircularProgressbar

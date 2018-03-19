@@ -37,10 +37,10 @@ const styles = theme => ({
     }
   },
   tableCell: {
-    fontSize: "0.7rem",
-    color: "#6A6C6E",
+    fontSize: "0.8rem",
+    padding: "0 10px",
+    textAlign: "center",
     "@media (min-width: 576px)": {
-      textAlign: "center",
       fontSize: "0.8rem"
     }
   },
