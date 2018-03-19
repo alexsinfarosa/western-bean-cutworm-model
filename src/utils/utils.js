@@ -39,12 +39,14 @@ export const matchIconsToStations = (station, state) => {
 
 // Handling Temperature parameter and Michigan network id adjustment
 export const networkTemperatureAdjustment = network => {
+  console.log(network);
   // Handling different temperature parameter for each network
   if (
     network === "newa" ||
     network === "icao" ||
     network === "njwx" ||
-    network === "nysm"
+    network === "nysm" ||
+    network === "oardc"
   ) {
     return "23";
   } else if (

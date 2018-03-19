@@ -90,6 +90,7 @@ export default async params => {
   }
 
   // handling timezone (tzo)
+  console.log(currentStation);
   let tzo = currentStation.meta.tzo;
   if (currentStation.meta.tzo !== sisterStation.meta.tzo) {
     tzo = sisterStation.meta.tzo;

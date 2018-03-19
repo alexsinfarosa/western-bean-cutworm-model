@@ -159,6 +159,7 @@ export default class ParamsStore {
   data = [];
   missingDays = [];
   setData = async params => {
+    // console.log(params);
     this.isLoading = true;
 
     // fetching data
@@ -183,6 +184,7 @@ export default class ParamsStore {
   }
 
   // date of interest flight completion
+  // to display in the circle
   get doiFlightCompletion() {
     return this.dataForTable[2].percentFlight;
   }
