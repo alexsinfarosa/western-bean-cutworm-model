@@ -1,4 +1,3 @@
-import { average } from "./utils";
 import { format, isSameYear } from "date-fns";
 
 export default (cleanedData, asJson) => {
@@ -23,60 +22,48 @@ export default (cleanedData, asJson) => {
   const datesNoYear = datesArr.map(d => d.slice(1).join("-"));
   const march1Idx = datesNoYear.findIndex(date => date === "03-01");
 
-  // handle bioFix
-  let bioFixIdx;
-  const bioFix = asJson.bioFix ? format(asJson.bioFix, "YYYY-MM-DD") : null;
-  if (bioFix) {
-    const bioFixArr = bioFix.split("-");
-    const bioFixNoYear = bioFixArr.slice(1).join("-");
-    bioFixIdx = datesNoYear.findIndex(date => date === bioFixNoYear);
-  }
-
   let results = [];
-  const base = 50;
-  let cdd = 0;
+  const lowerThreshold = 3.3; // Celcius
+  const upperThreshold = 29.3; // Celcius
+
+  let cdd = 0; // from January 1st
   let cddFromMarch1 = 0;
-  let cddBioFix = 0;
+  let percentFlight = 0;
+
   let missingDays = [];
   hrTemps.forEach((arr, i) => {
-    const avg = average(arr);
+    const min = Math.min(...arr);
+    const max = Math.max(...arr);
+    let mean = (min + max) / 2;
+
+    if (mean < lowerThreshold) mean = lowerThreshold;
+    if (mean > upperThreshold) mean = upperThreshold;
+
     let p = {};
 
-    if (!isNaN(avg)) {
-      // calculate dd (degree day)
-      const dd = avg - base > 0 ? avg - base : 0;
-
+    if (!isNaN(mean)) {
       // accumulation from Jannuary 1st
-      cdd += dd;
+      cdd += mean - lowerThreshold;
 
       // start accumulation from March 1st
-      if (i >= march1Idx) {
-        cddFromMarch1 += dd;
-      }
 
-      // start accumulation from BioFix date
-      if (i >= bioFixIdx) {
-        cddBioFix += dd;
+      if (i >= march1Idx) {
+        cddFromMarch1 += mean - lowerThreshold;
+        percentFlight =
+          100 /
+          (1 + Math.exp(-1 * ((Math.log(cddFromMarch1) - 7.315) / 0.044)));
       }
 
       p.date = dates[i];
-      p.dd = dd;
       p.cdd = cdd;
-      p.min = Math.min(...arr);
-      p.avg = avg;
-      p.max = Math.max(...arr);
-      p.cddFromMarch1 = cddFromMarch1;
-      p.cddBioFix = asJson.bioFix ? cddBioFix : "-";
+      p.cddFromMarch1 = cddFromMarch1.toPrecision(3);
+      p.percentFlight = parseFloat(percentFlight).toFixed(1);
     } else {
       missingDays.push(dates[i]);
       p.date = dates[i];
-      p.dd = "N/A";
       p.cdd = "N/A";
-      p.min = "N/A";
-      p.avg = "N/A";
-      p.max = "N/A";
       p.cddFromMarch1 = "N/A";
-      p.cddBioFix = "N/A";
+      p.percentFlight = "N/A";
     }
     results.push(p);
   });

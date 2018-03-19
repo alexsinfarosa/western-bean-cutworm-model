@@ -1,5 +1,6 @@
 import { replaceNonConsecutiveMissingValues } from "./utils";
 import { isSameYear } from "date-fns";
+import { fahrenheitToCelcius } from "../utils/utils";
 
 export default (acisData, asJson) => {
   const currentStn = acisData.get("currentStn");
@@ -25,7 +26,10 @@ export default (acisData, asJson) => {
           lastFiveDays = forecast.slice(-5);
 
           // replace missing values with forecast
-          tempArr = tempArr.map((t, j) => (t === "M" ? forecast[i][1][j] : t));
+          // forecast data is returned always in ˚F. This model uses ˚C
+          tempArr = tempArr.map(
+            (t, j) => (t === "M" ? fahrenheitToCelcius(forecast[i][1][j]) : t)
+          );
         }
       }
 
@@ -34,7 +38,7 @@ export default (acisData, asJson) => {
 
     if (isSameYear(new Date(), new Date(asJson.dateOfInterest))) {
       lastFiveDays.forEach(dayArr => {
-        results.set(dayArr[0], dayArr[1].map(d => d.toString()));
+        results.set(dayArr[0], dayArr[1].map(d => fahrenheitToCelcius(d)));
       });
     }
 

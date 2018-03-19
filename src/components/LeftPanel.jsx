@@ -69,9 +69,7 @@ class LeftPanel extends Component {
       setStationID,
       filteredStationList,
       dateOfInterest,
-      setDateOfInterest,
-      bioFix,
-      setBioFix
+      setDateOfInterest
     } = this.props.rootStore.paramsStore;
 
     const stateList = states.map(state => (
@@ -171,32 +169,6 @@ class LeftPanel extends Component {
               }}
               format="MMMM Do, YYYY"
               disableFuture
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton style={{ marginRight: -8 }}>
-                      <Icon>date_range</Icon>
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }}
-            />
-          </div>
-
-          {/* bioFix */}
-          <div className={classes.formControl}>
-            <DatePicker
-              style={{ width: "100%" }}
-              label="BioFix Date"
-              // helperText="Possible manual entry via keyboard"
-              maxDateMessage="Date must be less than date of interest"
-              value={bioFix}
-              onChange={e => {
-                setBioFix(e);
-                this.props.closeDrawer();
-              }}
-              format="MMMM Do, YYYY"
-              disableFuture={true}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">

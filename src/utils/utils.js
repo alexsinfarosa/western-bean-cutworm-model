@@ -83,7 +83,7 @@ export const idAdjustment = station => {
 export const avgTwoStringNumbers = (a, b) => {
   const aNum = parseFloat(a);
   const bNum = parseFloat(b);
-  return Math.round((aNum + bNum) / 2).toString();
+  return ((aNum + bNum) / 2).toPrecision(2).toString();
 };
 
 export const replaceNonConsecutiveMissingValues = arr => {
@@ -108,6 +108,11 @@ export const average = data => {
   //  calculating average
   let results = data.map(e => parseFloat(e));
   return Math.round(results.reduce((acc, val) => acc + val, 0) / data.length);
+};
+
+// Convert Fahrenheit to Celcius
+export const fahrenheitToCelcius = data => {
+  return ((data - 32) * 5 / 9).toPrecision(2).toString();
 };
 
 // convert time in local standard time to local time (based on time zone and dst)

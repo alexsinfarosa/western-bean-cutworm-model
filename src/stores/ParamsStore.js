@@ -6,7 +6,7 @@ import axios from "axios";
 import { idAdjustment, networkTemperatureAdjustment } from "../utils/utils";
 
 // date-fns
-import { format, startOfYear, isSameYear, isAfter, addDays } from "date-fns";
+import { format, startOfYear, isSameYear, addDays } from "date-fns";
 
 // fetch
 import fetchData from "../utils/fetchData";
@@ -92,14 +92,6 @@ export default class ParamsStore {
   dateOfInterest = new Date();
   setDateOfInterest = d => (this.dateOfInterest = d);
 
-  //   bioFix
-  bioFix = null;
-  setBioFix = d => {
-    isAfter(new Date(d), this.dateOfInterest)
-      ? (this.bioFix = this.dateOfInterest)
-      : (this.bioFix = d);
-  };
-
   //   localstorage
   writeToLocalstorage = json => {
     localStorage.setItem(
@@ -118,7 +110,6 @@ export default class ParamsStore {
         this.postalCode = params.postalCode;
         this.stationID = params.stationID;
         this.dateOfInterest = params.dateOfInterest;
-        this.bioFix = params.bioFix;
       }
     }
   };
@@ -127,8 +118,7 @@ export default class ParamsStore {
     return {
       postalCode: this.postalCode,
       stationID: this.stationID,
-      dateOfInterest: this.dateOfInterest,
-      bioFix: this.bioFix
+      dateOfInterest: this.dateOfInterest
     };
   }
 
@@ -149,7 +139,13 @@ export default class ParamsStore {
         sid: `${idAdjustment(this.station)} ${this.station.network}`,
         sdate: format(startOfYear(this.dateOfInterest), "YYYY-MM-DD"),
         edate: this.edate,
-        elems: networkTemperatureAdjustment(this.station.network),
+        elems: [
+          {
+            vX: Number(networkTemperatureAdjustment(this.station.network)),
+            units: "degreeC",
+            prec: 1
+          }
+        ],
         meta: "tzo"
       };
     }
@@ -201,8 +197,6 @@ decorate(ParamsStore, {
   dateOfInterest: observable,
   setDateOfInterest: action,
   edate: computed,
-  bioFix: observable,
-  setBioFix: action,
   asJson: computed,
   readFromLocalstorage: action,
   params: computed,
