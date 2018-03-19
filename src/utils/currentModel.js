@@ -50,13 +50,14 @@ export default (cleanedData, asJson) => {
       if (i >= march1Idx) {
         cddFromMarch1 += mean - lowerThreshold;
         percentFlight =
-          100 / (1 + Math.exp(-1 * ((Math.log(1432) - 7.315) / 0.044)));
+          100 /
+          (1 + Math.exp(-1 * ((Math.log(cddFromMarch1) - 7.315) / 0.044)));
       }
 
       p.date = dates[i];
       p.cdd = cdd;
-      p.cddFromMarch1 = cddFromMarch1.toPrecision(3);
-      p.percentFlight = parseFloat(percentFlight).toFixed(1);
+      p.cddFromMarch1 = cddFromMarch1.toFixed(0);
+      p.percentFlight = parseFloat(percentFlight).toFixed(0);
     } else {
       missingDays.push(dates[i]);
       p.date = dates[i];
