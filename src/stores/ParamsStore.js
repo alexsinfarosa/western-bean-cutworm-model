@@ -181,6 +181,11 @@ export default class ParamsStore {
   get dataForTable() {
     return this.data.slice(-8);
   }
+
+  // date of interest flight completion
+  get doiFlightCompletion() {
+    return this.dataForTable[2].percentFlight;
+  }
 }
 
 decorate(ParamsStore, {

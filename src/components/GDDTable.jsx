@@ -23,7 +23,7 @@ const styles = theme => ({
     width: "100%",
     maxWidth: 1200,
     margin: "0 auto",
-    marginTop: theme.spacing.unit * 4,
+    marginTop: theme.spacing.unit * 1,
     overflowX: "auto",
     borderRadius: 8
   },

@@ -50,8 +50,7 @@ export default (cleanedData, asJson) => {
       if (i >= march1Idx) {
         cddFromMarch1 += mean - lowerThreshold;
         percentFlight =
-          100 /
-          (1 + Math.exp(-1 * ((Math.log(cddFromMarch1) - 7.315) / 0.044)));
+          100 / (1 + Math.exp(-1 * ((Math.log(1432) - 7.315) / 0.044)));
       }
 
       p.date = dates[i];

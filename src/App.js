@@ -16,6 +16,7 @@ import MenuIcon from "material-ui-icons/Menu";
 
 // components
 import LeftPanel from "./components/LeftPanel";
+import Header from "./components/Header";
 import GDDTable from "./components/GDDTable";
 import USMap from "./components/USMap";
 
@@ -153,13 +154,13 @@ class App extends Component {
         <main className={classes.content}>
           {data.length !== 0 && (
             <Fragment>
+              <Header />
               <GDDTable />
             </Fragment>
           )}
         </main>
 
         {/* US map */}
-
         <Modal
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
