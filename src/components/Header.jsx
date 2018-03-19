@@ -27,6 +27,12 @@ const styles = theme => ({
   },
   hi: {
     color: "red"
+  },
+  header: {
+    fontSize: "1rem",
+    "@media (min-width: 576px)": {
+      fontSize: "1.5rem"
+    }
   }
 });
 
@@ -40,7 +46,7 @@ class Header extends Component {
 
     return (
       <div className={classes.root}>
-        <Typography variant="headline">
+        <Typography variant="display1" className={classes.header}>
           Western Bean Cutworm results for {station.name}, {station.state}
         </Typography>
         <div className={classes.circle}>

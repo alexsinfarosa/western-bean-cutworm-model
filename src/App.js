@@ -61,6 +61,14 @@ const styles = theme => ({
   link: {
     color: "#fff",
     textDecoration: "none"
+  },
+  header: {
+    fontSize: "1rem",
+    color: "white",
+    "@media (min-width: 576px)": {
+      fontSize: "1.4rem",
+      letterSpacing: 1
+    }
   }
 });
 
@@ -99,7 +107,7 @@ class App extends Component {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="title" noWrap style={{ color: "white" }}>
+            <Typography variant="title" noWrap className={classes.header}>
               Western Bean Cutworm Model
             </Typography>
             <Typography variant="subheading" style={{ marginLeft: "auto" }}>

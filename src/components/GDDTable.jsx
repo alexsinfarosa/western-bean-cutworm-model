@@ -37,8 +37,12 @@ const styles = theme => ({
     }
   },
   tableCell: {
-    padding: "0 10px",
-    textAlign: "center"
+    fontSize: "0.7rem",
+    color: "#6A6C6E",
+    "@media (min-width: 576px)": {
+      textAlign: "center",
+      fontSize: "0.8rem"
+    }
   },
   tableHeader: {
     display: "flex",
@@ -96,7 +100,7 @@ class GDDTable extends Component {
                       <TableCell
                         className={classes.tableCell}
                         style={{
-                          fontSize: isToday ? "1rem" : null,
+                          fontSize: isToday ? "0.9rem" : null,
                           fontWeight: isToday ? 700 : null
                         }}
                       >
@@ -104,7 +108,7 @@ class GDDTable extends Component {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: isToday ? "1rem" : null,
+                          fontSize: isToday ? "0.9rem" : null,
                           fontWeight: isToday ? 700 : null
                         }}
                         className={classes.tableCell}
@@ -113,7 +117,7 @@ class GDDTable extends Component {
                       </TableCell>
                       <TableCell
                         style={{
-                          fontSize: isToday ? "1rem" : null,
+                          fontSize: isToday ? "0.9rem" : null,
                           fontWeight: isToday ? 700 : null
                         }}
                         className={classes.tableCell}
@@ -127,6 +131,7 @@ class GDDTable extends Component {
             </Table>
           )}
         </Paper>
+
         {/* Missing Days */}
         {missingDays.length !== 0 && (
           <Typography variant="caption" className={classes.missingDays}>
