@@ -81,10 +81,10 @@ class GDDTable extends Component {
                 <TableRow>
                   <TableCell className={classes.tableCell}>Date</TableCell>
                   <TableCell className={classes.tableCell}>
-                    Accumulation degree days
+                    Accumulation degree days (˚C)
                   </TableCell>
                   <TableCell className={classes.tableCell}>
-                    Flight completion
+                    Flight completion (%)
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -96,8 +96,6 @@ class GDDTable extends Component {
                       <TableCell
                         className={classes.tableCell}
                         style={{
-                          padding: "0px 10px",
-                          textAlign: "center",
                           fontSize: isToday ? "1rem" : null,
                           fontWeight: isToday ? 700 : null
                         }}

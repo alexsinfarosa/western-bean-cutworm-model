@@ -52,7 +52,9 @@ class Header extends Component {
                 stroke: indigo[300]
               },
               text: {
-                fill: indigo[500]
+                fill: indigo[500],
+                fontSize: 26,
+                fontWeight: 700
               }
             }}
           />

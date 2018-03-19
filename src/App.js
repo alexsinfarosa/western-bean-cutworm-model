@@ -85,7 +85,7 @@ class App extends Component {
 
   render() {
     const { classes } = this.props;
-    const { data } = this.props.rootStore.paramsStore;
+    const { data, station } = this.props.rootStore.paramsStore;
 
     return (
       <div className={classes.root}>
@@ -152,12 +152,13 @@ class App extends Component {
 
         {/* main content */}
         <main className={classes.content}>
-          {data.length !== 0 && (
-            <Fragment>
-              <Header />
-              <GDDTable />
-            </Fragment>
-          )}
+          {data.length !== 0 &&
+            station && (
+              <Fragment>
+                <Header />
+                <GDDTable />
+              </Fragment>
+            )}
         </main>
 
         {/* US map */}
