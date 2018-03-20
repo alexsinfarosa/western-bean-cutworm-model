@@ -38,9 +38,7 @@ export const matchIconsToStations = (station, state) => {
 };
 
 // Handling Temperature parameter and Michigan network id adjustment
-export const networkTemperatureAdjustment = network => {
-  // console.log(network);
-  // Handling different temperature parameter for each network
+export const vXAdjustment = network => {
   if (
     network === "newa" ||
     network === "icao" ||
@@ -48,12 +46,67 @@ export const networkTemperatureAdjustment = network => {
     network === "nysm" ||
     network === "oardc"
   ) {
-    return "23";
+    return vXDef[network]["temp"];
   } else if (
     network === "miwx" ||
     (network === "cu_log" || network === "culog")
   ) {
-    return "126";
+    return vXDef[network]["temp"];
+  }
+};
+
+const vXDef = {
+  newa: {
+    pcpn: 5,
+    temp: 23,
+    rhum: 24,
+    lwet: 118,
+    wspd: 128,
+    wdir: 130,
+    srad: 132,
+    st4i: 120,
+    sm4i: 65
+  },
+  icao: { pcpn: 5, temp: 23, rhum: 24, wspd: 28, wdir: 27, dwpt: 22 },
+  cu_log: {
+    pcpn: 5,
+    temp: 126,
+    rhum: 24,
+    lwet: 118,
+    wspd: 128,
+    wdir: 130,
+    srad: 132
+  },
+  culog: {
+    pcpn: 5,
+    temp: 126,
+    rhum: 24,
+    lwet: 118,
+    wspd: 128,
+    wdir: 130,
+    srad: 132
+  },
+  njwx: { pcpn: 5, temp: 23, rhum: 24, wspd: 28, wdir: 27, srad: 149 },
+  miwx: { pcpn: 5, temp: 126, rhum: 143, lwet: 118, srad: 132 },
+  oardc: {
+    pcpn: 5,
+    temp: 23,
+    rhum: 24,
+    lwet: 118,
+    wspd: 28,
+    wdir: 27,
+    srad: 132,
+    st4i: 120
+  },
+  nysm: {
+    pcpn: 5,
+    temp: 23,
+    rhum: 24,
+    wspd: 28,
+    wdir: 27,
+    srad: 132,
+    st4i: 120,
+    sm2i: 104
   }
 };
 
