@@ -3,7 +3,7 @@ import states from "../assets/states.json";
 import axios from "axios";
 
 // utils
-import { idAdjustment, vXAdjustment } from "../utils/utils";
+import { idAdjustment, vXDef } from "../utils/utils";
 
 // date-fns
 import { format, startOfYear, isSameYear, addDays } from "date-fns";
@@ -134,14 +134,15 @@ export default class ParamsStore {
   }
 
   get params() {
-    if (this.station) {
+    const { station, edate, dateOfInterest } = this;
+    if (station) {
       return {
-        sid: `${idAdjustment(this.station)} ${this.station.network}`,
-        sdate: format(startOfYear(this.dateOfInterest), "YYYY-MM-DD"),
-        edate: this.edate,
+        sid: `${idAdjustment(station)} ${station.network}`,
+        sdate: format(startOfYear(dateOfInterest), "YYYY-MM-DD"),
+        edate,
         elems: [
           {
-            vX: vXAdjustment(this.station.network),
+            vX: vXDef[station.network]["temp"],
             units: "degreeC",
             prec: 1
           }

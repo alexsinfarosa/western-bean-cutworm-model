@@ -37,25 +37,7 @@ export const matchIconsToStations = (station, state) => {
   }
 };
 
-// Handling Temperature parameter and Michigan network id adjustment
-export const vXAdjustment = network => {
-  if (
-    network === "newa" ||
-    network === "icao" ||
-    network === "njwx" ||
-    network === "nysm" ||
-    network === "oardc"
-  ) {
-    return vXDef[network]["temp"];
-  } else if (
-    network === "miwx" ||
-    (network === "cu_log" || network === "culog")
-  ) {
-    return vXDef[network]["temp"];
-  }
-};
-
-const vXDef = {
+export const vXDef = {
   newa: {
     pcpn: 5,
     temp: 23,
@@ -142,6 +124,7 @@ export const avgTwoStringNumbers = (a, b) => {
 };
 
 export const replaceNonConsecutiveMissingValues = arr => {
+  // console.log(arr);
   return arr.map((t, i) => {
     if (i === 0 && t === "M") {
       return arr[i + 1];
