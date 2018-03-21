@@ -51,6 +51,9 @@ const styles = theme => ({
     borderRight: "1px solid #eee"
   },
   missingDays: {
+    width: "100%",
+    maxWidth: 1200,
+    margin: "0 auto",
     marginTop: theme.spacing.unit * 1
   }
 });
