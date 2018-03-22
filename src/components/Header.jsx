@@ -57,6 +57,9 @@ class Header extends Component {
           <CircularProgressbar
             initialAnimation={true}
             percentage={doiFlightCompletion}
+            textForPercentage={pct =>
+              doiFlightCompletion === "N/A" ? "N/A" : `${pct}%`
+            }
             styles={{
               path: {
                 stroke: indigo[300]
