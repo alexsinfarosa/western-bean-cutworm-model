@@ -138,6 +138,14 @@ export const replaceNonConsecutiveMissingValues = arr => {
   });
 };
 
+export const flatten = arr => Array.prototype.concat(...arr);
+
+export const unflatted = array => {
+  let res = [];
+  while (array.length > 0) res.push(array.splice(0, 24));
+  return res;
+};
+
 // Returns average of all the values in array
 export const average = data => {
   // handling the case for T and W
