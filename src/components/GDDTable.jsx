@@ -136,21 +136,22 @@ class GDDTable extends Component {
         </Paper>
 
         {/* Missing Days */}
-        {missingDays.length !== 0 && (
-          <Typography variant="caption" className={classes.missingDays}>
-            {`(+${missingDays.length}) ${
-              missingDays.length === 1 ? "day" : "days"
-            } missing: 
+        {missingDays.length !== 0 &&
+          !isLoading && (
+            <Typography variant="caption" className={classes.missingDays}>
+              {`(+${missingDays.length}) ${
+                missingDays.length === 1 ? "day" : "days"
+              } missing: 
                   `}
-            {missingDays.map((d, i) => {
-              if (i === missingDays.length - 1) {
-                return <span key={d}>{format(d, "MMMM Do")}.</span>;
-              } else {
-                return <span key={d}>{format(d, "MMMM Do")}, </span>;
-              }
-            })}
-          </Typography>
-        )}
+              {missingDays.map((d, i) => {
+                if (i === missingDays.length - 1) {
+                  return <span key={d}>{format(d, "MMMM Do")}.</span>;
+                } else {
+                  return <span key={d}>{format(d, "MMMM Do")}, </span>;
+                }
+              })}
+            </Typography>
+          )}
       </Fragment>
     );
   }
