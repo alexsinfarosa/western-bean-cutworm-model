@@ -36,12 +36,15 @@ class USMap extends Component {
 
     const { postalCode } = this.props.rootStore.paramsStore;
     if (postalCode !== "ALL") {
-      const url = `http://data.rcc-acis.org/General/state?state=${postalCode}&meta=name,geojson`;
+      const url = `${
+        window.location.protocol
+      }//data.rcc-acis.org/General/state?state=${postalCode}&meta=name,geojson`;
 
       fetch(url)
         .then(res => res.json())
         .then(res => {
           const geojson = res.meta[0].geojson;
+          console.log(geojson);
           this.setState({ geojson });
         });
     }
