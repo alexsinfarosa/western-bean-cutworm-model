@@ -44,7 +44,6 @@ class USMap extends Component {
         .then(res => res.json())
         .then(res => {
           const geojson = res.meta[0].geojson;
-          console.log(geojson);
           this.setState({ geojson });
         });
     }
