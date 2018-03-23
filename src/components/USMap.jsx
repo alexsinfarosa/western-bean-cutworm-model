@@ -70,7 +70,10 @@ class USMap extends Component {
       <Marker
         key={`${station.id} ${station.network}`}
         position={[station.lat, station.lon]}
-        icon={L.icon({ iconUrl: station.icon })}
+        icon={L.icon({
+          iconUrl: station.icon,
+          iconSize: [12, 12]
+        })}
         title={station.name}
         onClick={() => this.handleStateStationFromMap(station)}
       >

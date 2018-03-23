@@ -1,13 +1,18 @@
+import plane from "../assets/plane.png";
+import planeGrey from "../assets/planeGrey.png";
+import iconStation from "../assets/station.png";
+import stationGrey from "../assets/stationGrey.png";
+
 // MAP ---------------------------------------------------------
 export const matchIconsToStations = (station, state) => {
   const protocol = window.location.protocol;
   const { network } = station;
   const { postalCode } = state;
 
-  const newa = `${protocol}//newa2.nrcc.cornell.edu/gifs/newa_small.png`;
-  const newaGray = `${protocol}//newa2.nrcc.cornell.edu/gifs/newa_smallGray.png`;
-  const airport = `${protocol}//newa2.nrcc.cornell.edu/gifs/airport.png`;
-  const airportGray = `${protocol}//newa2.nrcc.cornell.edu/gifs/airportGray.png`;
+  const newa = iconStation;
+  const newaGray = stationGrey;
+  const airport = plane;
+  const airportGray = planeGrey;
   const culog = `${protocol}//newa2.nrcc.cornell.edu/gifs/culog.png`;
   const culogGray = `${protocol}//newa2.nrcc.cornell.edu/gifs/culogGray.png`;
 
