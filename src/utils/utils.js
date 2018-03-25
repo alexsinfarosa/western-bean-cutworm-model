@@ -128,19 +128,67 @@ export const avgTwoStringNumbers = (a, b) => {
   return ((aNum + bNum) / 2).toPrecision(2).toString();
 };
 
-export const replaceNonConsecutiveMissingValues = arr => {
-  // console.log(arr);
-  return arr.map((t, i) => {
-    if (i === 0 && t === "M") {
-      return arr[i + 1];
-    } else if (i === arr.length - 1 && t === "M") {
-      return arr[i - 1];
-    } else if (t === "M" && arr[i - 1] !== "M" && arr[i + 1] !== "M") {
-      return avgTwoStringNumbers(arr[i - 1], arr[i + 1]);
-    } else {
-      return t;
+// export const replaceNonConsecutiveMissingValues = arr => {
+//   // console.log(arr);
+//   return arr.map((t, i) => {
+//     if (i === 0 && t === "M") {
+//       return arr[i + 1];
+//     } else if (i === arr.length - 1 && t === "M") {
+//       return arr[i - 1];
+//     } else if (t === "M" && arr[i - 1] !== "M" && arr[i + 1] !== "M") {
+//       return avgTwoStringNumbers(arr[i - 1], arr[i + 1]);
+//     } else {
+//       return t;
+//     }
+//   });
+// };
+
+const weightedMean = res => {
+  // arr = [2,M,M,5]
+  const arr = res.map(d => Number(d));
+  const firstM = ((arr[0] + arr[0] + arr[3]) / 3).toPrecision(2);
+  const secondM = ((arr[0] + arr[3] + arr[3]) / 3).toPrecision(2);
+  return [firstM, secondM];
+};
+
+
+export const averageMissingValues = d => {
+  // console.log(d);
+  if (d.includes("M")) {
+    if (d[0] === "M" && d[1] !== "M") d[0] = d[1];
+    if (d[0] === "M" && d[1] === "M" && d[2] !== "M") {
+      d[0] = d[2];
+      d[1] = d[2];
     }
-  });
+
+    const len = d.length - 1;
+    if (d[len] === "M" && d[len - 1] !== "M") d[len] = d[len - 1];
+    if (d[len] === "M" && d[len - 1] === "M" && d[len - 2] !== "M") {
+      d[len] = d[len - 2];
+      d[len - 1] = d[len - 2];
+    }
+
+    return d.map((t, i) => {
+      if (d[i - 1] !== "M" && t === "M" && d[i + 1] !== "M") {
+        return avgTwoStringNumbers(d[i - 1], d[i + 1]);
+      }
+
+      if (
+        d[i - 1] !== "M" &&
+        t === "M" &&
+        d[i + 1] === "M" &&
+        d[i + 2] !== "M"
+      ) {
+        const arr = [d[i - 1], d[i], d[i + 1], d[i + 2]];
+        const rep = weightedMean(arr);
+        t = rep[0];
+        d[i + 1] = rep[1];
+      }
+
+      return t;
+    });
+  }
+  return d;
 };
 
 export const flatten = arr => Array.prototype.concat(...arr);

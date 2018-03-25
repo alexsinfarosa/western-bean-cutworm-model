@@ -1,8 +1,7 @@
 import { isSameYear } from "date-fns";
 import {
   fahrenheitToCelcius,
-  // averageMissingValues,
-  replaceNonConsecutiveMissingValues
+  averageMissingValues,
 } from "../utils/utils";
 
 export default (acisData, asJson) => {
@@ -16,9 +15,9 @@ export default (acisData, asJson) => {
     let tempArr = [];
     currentStn.forEach((el, i) => {
       // replace non consecutive missing values
-      tempArr = replaceNonConsecutiveMissingValues(el[1]);
-      // tempArr = averageMissingValues(el[1]);
-      // console.log(tempArr);
+      // tempArr = replaceNonConsecutiveMissingValues(el[1]);
+      tempArr = averageMissingValues(el[1]);
+      // console.log(el[0],tempArr);
 
       // replace missing values with sister station
       if (sisterStn.length !== 0) {
