@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
+import iconStation from "../assets/stationR.png";
 
 // map
 import { Map, TileLayer, Marker, Tooltip, GeoJSON } from "react-leaflet";
@@ -58,7 +59,8 @@ class USMap extends Component {
 
   render() {
     const { classes } = this.props;
-    const { state, stations } = this.props.rootStore.paramsStore;
+    const { state, stations, station } = this.props.rootStore.paramsStore;
+    console.log(station)
 
     const stationsWithMatchedIcons = stations.map(station => {
       station["icon"] = matchIconsToStations(station, state);
@@ -66,16 +68,19 @@ class USMap extends Component {
     });
 
     // Marker list
-    const MarkerList = stationsWithMatchedIcons.map(station => (
+    const MarkerList = stationsWithMatchedIcons.map(stn => (
       <Marker
-        key={`${station.id} ${station.network}`}
-        position={[station.lat, station.lon]}
-        icon={L.icon({
-          iconUrl: station.icon,
+        key={`${stn.id} ${stn.network}`}
+        position={[stn.lat, stn.lon]}
+        icon={stn.id === station.id ? L.icon({
+          iconUrl: iconStation,
+          iconSize: [14, 14]
+        }) : L.icon({
+          iconUrl: stn.icon,
           iconSize: [12, 12]
         })}
-        title={station.name}
-        onClick={() => this.handleStateStationFromMap(station)}
+        title={stn.name}
+        onClick={() => this.handleStateStationFromMap(stn)}
       >
         <Tooltip>
           <span>
