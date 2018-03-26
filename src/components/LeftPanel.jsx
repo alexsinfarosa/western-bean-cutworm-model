@@ -171,8 +171,8 @@ class LeftPanel extends Component {
               disableFuture
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton style={{ marginRight: -8 }}>
+                  <InputAdornment position="end" style={{width: 30, display: 'flex', justifyContent: 'center'}}>
+                    <IconButton>
                       <Icon>date_range</Icon>
                     </IconButton>
                   </InputAdornment>
