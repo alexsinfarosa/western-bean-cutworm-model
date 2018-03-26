@@ -12,6 +12,8 @@ import indigo from "material-ui/colors/indigo";
 const styles = theme => ({
   root: {
     width: "100%",
+    maxWidth: 1200,
+    margin: "0 auto",
     marginTop: theme.spacing.unit * 1,
     height: 80,
     color: "#6A6C6E",
