@@ -20,6 +20,7 @@ import Header from "./components/Header";
 import GDDTable from "./components/GDDTable";
 import USMap from "./components/USMap";
 // import Graph from "./components/Graph";
+import Footer from "./components/Footer";
 
 const drawerWidth = 250;
 const styles = theme => ({
@@ -30,7 +31,8 @@ const styles = theme => ({
     position: "relative",
     display: "flex",
     width: "100%",
-    height: "100vh"
+    height: "100vh",
+    backgroundColor: "#E7ECF0"
   },
   appBar: {
     position: "absolute",
@@ -51,7 +53,11 @@ const styles = theme => ({
     }
   },
   content: {
-    flex: 1,
+    width: "100%",
+    display: "flex",
+    minHeight: "100%",
+    flexDirection: "column",
+
     backgroundColor: "#E7ECF0",
     paddingLeft: theme.spacing.unit * 1.5,
     paddingRight: theme.spacing.unit * 1.5,
@@ -165,8 +171,13 @@ class App extends Component {
             station && (
               <Fragment>
                 <Header />
-                <GDDTable />
+
+                <div style={{ flex: 1 }}>
+                  <GDDTable />
+                </div>
                 {/*<Graph />*/}
+
+                <Footer />
               </Fragment>
             )}
         </main>

@@ -12,17 +12,14 @@ import indigo from "material-ui/colors/indigo";
 const styles = theme => ({
   root: {
     width: "100%",
+    flex: "none",
+    display: "flex",
     maxWidth: 1200,
     margin: "0 auto",
-    marginTop: theme.spacing.unit * 4,
-    height: 80,
-    color: "#6A6C6E",
-    display: "flex",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     alignItems: "center",
-    "@media (min-width: 576px)": {
-      marginTop: theme.spacing.unit * 4
-    }
+    marginTop: theme.spacing.unit * 4,
+    marginBottom: theme.spacing.unit * 1
   },
   circle: {
     width: 80
@@ -55,6 +52,7 @@ class Header extends Component {
         <Typography variant="display1" className={classes.header}>
           Results for {station.name}, {station.state}
         </Typography>
+
         <div className={classes.circle}>
           <CircularProgressbar
             initialAnimation={true}

@@ -45,8 +45,8 @@ const styles = theme => ({
   center: {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
-    borderBottom: "1px solid #949494"
+    alignItems: "center"
+    // borderBottom: "1px solid #949494"
   },
   link: {
     color: "#a52c25",
@@ -97,7 +97,7 @@ class LeftPanel extends Component {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Cornell University
+              CORNELL UNIVERSITY
             </a>
           </Typography>
         </div>
@@ -171,7 +171,14 @@ class LeftPanel extends Component {
               disableFuture
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end" style={{width: 30, display: 'flex', justifyContent: 'center'}}>
+                  <InputAdornment
+                    position="end"
+                    style={{
+                      width: 30,
+                      display: "flex",
+                      justifyContent: "center"
+                    }}
+                  >
                     <IconButton>
                       <Icon>date_range</Icon>
                     </IconButton>
