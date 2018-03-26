@@ -8,7 +8,9 @@ import {
   VictoryLine,
   VictoryAxis,
   VictoryZoomContainer,
-  VictoryTheme
+  VictoryTheme,
+  VictoryTooltip,
+  VictoryVoronoiContainer
 } from "victory";
 import { format } from "date-fns";
 
@@ -39,6 +41,9 @@ class Graph extends Component {
           width={w}
           height={w > 576 ? h * 0.4 : h * 0.55}
           containerComponent={<VictoryZoomContainer />}
+          // containerComponent={
+          //   <VictoryVoronoiContainer labels={d => `${d.x}, ${d.y}`} />
+          // }
           padding={{ top: 20, right: 20, left: 50, bottom: 50 }}
         >
           <VictoryAxis
@@ -75,6 +80,7 @@ class Graph extends Component {
           />
 
           <VictoryLine
+            labelComponent={<VictoryTooltip />}
             style={{
               data: { stroke: "#67ac5b", strokeWidth: 1 }
             }}
