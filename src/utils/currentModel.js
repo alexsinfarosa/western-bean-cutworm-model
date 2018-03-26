@@ -55,9 +55,9 @@ export default (cleanedData, asJson) => {
       }
 
       p.date = dates[i];
-      p.cdd = cdd;
-      p.cddFromMarch1 = cddFromMarch1.toFixed(0);
-      p.percentFlight = parseFloat(percentFlight).toFixed(0);
+      p.cdd = Number(cdd.toFixed(1));
+      p.cddFromMarch1 = Number(cddFromMarch1.toFixed(1));
+      p.percentFlight = Number(parseFloat(percentFlight).toFixed(1));
     } else {
       missingDays.push(dates[i]);
       p.date = dates[i];

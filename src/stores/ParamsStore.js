@@ -175,6 +175,7 @@ export default class ParamsStore {
       this.asJson
     );
 
+    console.log(results);
     this.data = results;
     this.missingDays = missingDays;
     this.isLoading = false;

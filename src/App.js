@@ -19,6 +19,7 @@ import LeftPanel from "./components/LeftPanel";
 import Header from "./components/Header";
 import GDDTable from "./components/GDDTable";
 import USMap from "./components/USMap";
+import Graph from "./components/Graph";
 
 const drawerWidth = 250;
 const styles = theme => ({
@@ -50,13 +51,13 @@ const styles = theme => ({
     }
   },
   content: {
-    flexGrow: 1,
-    flexShrink: 1,
+    flex: 1,
     backgroundColor: "#E7ECF0",
     paddingLeft: theme.spacing.unit * 1.5,
     paddingRight: theme.spacing.unit * 1.5,
     paddingTop: theme.spacing.unit * 8,
-    margin: "0 auto"
+    margin: "0 auto",
+    overflowY: "auto"
   },
   link: {
     color: "#fff",
@@ -165,6 +166,7 @@ class App extends Component {
               <Fragment>
                 <Header />
                 <GDDTable />
+                <Graph />
               </Fragment>
             )}
         </main>
