@@ -60,7 +60,6 @@ class USMap extends Component {
   render() {
     const { classes } = this.props;
     const { state, stations, station } = this.props.rootStore.paramsStore;
-    console.log(station)
 
     const stationsWithMatchedIcons = stations.map(station => {
       station["icon"] = matchIconsToStations(station, state);
