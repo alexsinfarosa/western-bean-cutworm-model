@@ -14,14 +14,14 @@ const styles = theme => ({
     width: "100%",
     maxWidth: 1200,
     margin: "0 auto",
-    marginTop: theme.spacing.unit * 1,
+    marginTop: theme.spacing.unit * 4,
     height: 80,
     color: "#6A6C6E",
     display: "flex",
     justifyContent: "space-around",
     alignItems: "center",
     "@media (min-width: 576px)": {
-      marginTop: theme.spacing.unit * 2
+      marginTop: theme.spacing.unit * 4
     }
   },
   circle: {
