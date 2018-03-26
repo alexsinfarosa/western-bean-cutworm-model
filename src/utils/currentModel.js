@@ -61,9 +61,9 @@ export default (cleanedData, asJson) => {
     } else {
       missingDays.push(dates[i]);
       p.date = dates[i];
-      p.cdd = "N/A";
-      p.cddFromMarch1 = "N/A";
-      p.percentFlight = "N/A";
+      p.cdd = null;
+      p.cddFromMarch1 = null;
+      p.percentFlight = null;
     }
     results.push(p);
   });

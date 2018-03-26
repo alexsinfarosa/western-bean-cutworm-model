@@ -10,7 +10,6 @@ import {
   VictoryZoomContainer,
   VictoryTheme,
   VictoryTooltip,
-  VictoryVoronoiContainer
 } from "victory";
 import { format } from "date-fns";
 
@@ -23,9 +22,10 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 8,
     marginBottom: theme.spacing.unit * 8,
     borderRadius: 8,
-    height: "40vh"
+    height: "35vh"
   }
 });
+
 const w = window.innerWidth;
 const h = window.innerHeight;
 
@@ -48,12 +48,12 @@ class Graph extends Component {
         >
           <VictoryAxis
             scale={{ x: "time" }}
-            tickCount={w > 576 ? 12 : 8}
+            tickCount={w > 576 ? 16 : 8}
             tickFormat={t => format(t, "MMM DD")}
             style={{
               axis: { stroke: "#e0e0e0", strokeWidth: 1 },
               tickLabels: {
-                fontSize: w > 576 ? 11 : 10,
+                fontSize: w > 576 ? 12 : 10,
                 angle: -45,
                 padding: 7,
                 verticalAnchor: "middle",
@@ -72,7 +72,7 @@ class Graph extends Component {
                 strokeWidth: 1
               },
               tickLabels: {
-                fontSize: w > 576 ? 11 : 10
+                fontSize: w > 576 ? 12 : 10
               },
               grid: { stroke: "none", strokeWidth: 0.25 },
               ticks: { stroke: "#e0e0e0", size: 5 }

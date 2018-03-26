@@ -19,7 +19,7 @@ import LeftPanel from "./components/LeftPanel";
 import Header from "./components/Header";
 import GDDTable from "./components/GDDTable";
 import USMap from "./components/USMap";
-import Graph from "./components/Graph";
+// import Graph from "./components/Graph";
 
 const drawerWidth = 250;
 const styles = theme => ({
@@ -166,7 +166,7 @@ class App extends Component {
               <Fragment>
                 <Header />
                 <GDDTable />
-                <Graph />
+                {/*<Graph />*/}
               </Fragment>
             )}
         </main>

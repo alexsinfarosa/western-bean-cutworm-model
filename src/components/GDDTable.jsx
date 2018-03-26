@@ -116,7 +116,7 @@ class GDDTable extends Component {
                         }}
                         className={classes.tableCell}
                       >
-                        {o.cddFromMarch1}
+                        {o.cddFromMarch1 === null ? 'N/A' : o.cddFromMarch1}
                       </TableCell>
                       <TableCell
                         style={{
@@ -125,7 +125,7 @@ class GDDTable extends Component {
                         }}
                         className={classes.tableCell}
                       >
-                        {o.percentFlight}
+                        {o.percentFlight === null ? 'N/A' : o.percentFlight}
                       </TableCell>
                     </TableRow>
                   );
@@ -141,7 +141,7 @@ class GDDTable extends Component {
             <Typography variant="caption" className={classes.missingDays}>
               {`(+${missingDays.length}) ${
                 missingDays.length === 1 ? "day" : "days"
-              } missing: 
+              } missing:
                   `}
               {missingDays.map((d, i) => {
                 if (i === missingDays.length - 1) {
