@@ -16,13 +16,14 @@ const styles = theme => ({
     display: "flex",
     maxWidth: 1200,
     margin: "0 auto",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
     marginTop: theme.spacing.unit * 4,
     marginBottom: theme.spacing.unit * 1
   },
   circle: {
-    width: 80
+    width: 80,
+    marginLeft: 40
   },
   low: {
     stoke: "green"

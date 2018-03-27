@@ -97,7 +97,7 @@ export const vXDef = {
   }
 };
 
-// Handling Michigan state ID adjustment
+// Handling ID adjustment
 export const idAdjustment = station => {
   // Michigan
   if (
@@ -108,6 +108,7 @@ export const idAdjustment = station => {
     // example: ew_ITH
     return station.id.slice(3, 6);
   }
+
   // NY mesonet
   if (
     station.state === "NY" &&
@@ -128,23 +129,8 @@ export const avgTwoStringNumbers = (a, b) => {
   return ((aNum + bNum) / 2).toFixed(1);
 };
 
-// export const replaceNonConsecutiveMissingValues = arr => {
-//   // console.log(arr);
-//   return arr.map((t, i) => {
-//     if (i === 0 && t === "M") {
-//       return arr[i + 1];
-//     } else if (i === arr.length - 1 && t === "M") {
-//       return arr[i - 1];
-//     } else if (t === "M" && arr[i - 1] !== "M" && arr[i + 1] !== "M") {
-//       return avgTwoStringNumbers(arr[i - 1], arr[i + 1]);
-//     } else {
-//       return t;
-//     }
-//   });
-// };
-
 const weightedMean = res => {
-  // arr = [2,M,M,5]
+  // ex: [2,M,M,5] => [2,3,45]
   const arr = res.map(d => Number(d));
   const firstM = ((arr[0] + arr[0] + arr[3]) / 3).toPrecision(2);
   const secondM = ((arr[0] + arr[3] + arr[3]) / 3).toPrecision(2);
@@ -198,20 +184,8 @@ export const unflatten = array => {
   return res;
 };
 
-// Returns average of all the values in array
-export const average = data => {
-  // handling the case for T and W
-  if (data.length === 0) return 0;
-
-  //  calculating average
-  let results = data.map(e => parseFloat(e));
-  return Math.round(results.reduce((acc, val) => acc + val, 0) / data.length);
-};
-
 // Convert Fahrenheit to Celcius
-export const fahrenheitToCelcius = t => {
-  return ((t - 32) * 5 / 9).toFixed(1);
-};
+export const fahrenheitToCelcius = t => ((t - 32) * 5 / 9).toFixed(1);
 
 // convert time in local standard time to local time (based on time zone and dst)
 // function formatTime(day, hour, tzo) {

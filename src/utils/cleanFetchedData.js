@@ -44,6 +44,6 @@ export default (acisData, asJson) => {
 
   replacedUnflattened.forEach((day, i) => results.set(dates[i], day));
 
-  console.log(results);
+  // console.log(results);
   return results;
 };
