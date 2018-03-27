@@ -135,6 +135,7 @@ export default class ParamsStore {
 
   get params() {
     const { station, dateOfInterest } = this;
+
     if (station) {
       return {
         sid: `${idAdjustment(station)} ${station.network}`,

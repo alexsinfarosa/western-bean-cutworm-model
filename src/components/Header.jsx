@@ -32,7 +32,7 @@ const styles = theme => ({
     color: "red"
   },
   header: {
-    fontSize: "1rem",
+    fontSize: "1.2rem",
     color: "black",
     "@media (min-width: 576px)": {
       fontSize: "1.5rem"
