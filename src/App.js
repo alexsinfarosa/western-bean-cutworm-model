@@ -21,6 +21,7 @@ import GDDTable from "./components/GDDTable";
 import USMap from "./components/USMap";
 // import Graph from "./components/Graph";
 import Footer from "./components/Footer";
+import Acknowledgment from "./components/Acknowledgment";
 
 const drawerWidth = 250;
 const styles = theme => ({
@@ -184,8 +185,8 @@ class App extends Component {
 
         {/* US map */}
         <Modal
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
+          aria-labelledby="US map"
+          aria-describedby="US map"
           disableAutoFocus={true}
           open={this.state.isModalOpen}
           onClose={this.toggleModal}
