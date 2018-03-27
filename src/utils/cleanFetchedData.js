@@ -2,51 +2,48 @@ import { isSameYear } from "date-fns";
 import {
   fahrenheitToCelcius,
   averageMissingValues,
+  flatten,
+  unflatten
 } from "../utils/utils";
 
 export default (acisData, asJson) => {
+  // current station
   const currentStn = acisData.get("currentStn");
 
-  if (currentStn.length !== 0) {
-    const sisterStn = acisData.get("sisterStn");
-    let lastFiveDays;
+  // dates has date of interest +5 days
+  let dates = currentStn.map(arr => arr[0]);
 
-    const results = new Map();
-    let tempArr = [];
-    currentStn.forEach((el, i) => {
-      // replace non consecutive missing values
-      // tempArr = replaceNonConsecutiveMissingValues(el[1]);
-      tempArr = averageMissingValues(el[1]);
-      // console.log(el[0],tempArr);
+  const currentStnValues = averageMissingValues(
+    flatten(currentStn.map(arr => arr[1]))
+  );
 
-      // replace missing values with sister station
-      if (sisterStn.length !== 0) {
-        tempArr = tempArr.map((t, j) => (t === "M" ? sisterStn[i][1][j] : t));
-      }
+  // sister station
+  const sisterStn = acisData.get("sisterStn");
+  const sisterStnValues = flatten(sisterStn.map(arr => arr[1]));
 
-      if (isSameYear(new Date(), new Date(asJson.dateOfInterest))) {
-        const forecast = acisData.get("forecast");
-        if (forecast.length !== 0) {
-          lastFiveDays = forecast.slice(-5);
+  // replace current station values with sister station's
+  let replaced = currentStnValues.map(
+    (t, i) => (t === "M" ? sisterStnValues[i] : t)
+  );
 
-          // replace missing values with forecast
-          // forecast data is returned always in ˚F. This model uses ˚C
-          tempArr = tempArr.map(
-            (t, j) => (t === "M" ? fahrenheitToCelcius(forecast[i][1][j]) : t)
-          );
-        }
-      }
+  replaced = averageMissingValues(replaced);
 
-      results.set(el[0], tempArr);
-    });
+  // if date of interest is in current year
+  if (isSameYear(new Date(), new Date(asJson.dateOfInterest))) {
+    const forecast = acisData.get("forecast");
+    const forecastValues = flatten(forecast.map(arr => arr[1]));
 
-    if (isSameYear(new Date(), new Date(asJson.dateOfInterest))) {
-      lastFiveDays.forEach(dayArr => {
-        results.set(dayArr[0], dayArr[1].map(d => fahrenheitToCelcius(d)));
-      });
-    }
-
-    // console.log(results);
-    return results;
+    // replace missing values with forecast data
+    replaced = replaced.map(
+      (t, i) => (t === "M" ? fahrenheitToCelcius(forecastValues[i]) : t)
+    );
   }
+
+  const replacedUnflattened = unflatten(replaced);
+  let results = new Map();
+
+  replacedUnflattened.forEach((day, i) => results.set(dates[i], day));
+
+  console.log(results);
+  return results;
 };

@@ -32,21 +32,23 @@ export default (cleanedData, asJson) => {
 
   let missingDays = [];
   hrTemps.forEach((arr, i) => {
-    const min = Math.min(...arr);
-    const max = Math.max(...arr);
-    let mean = (min + max) / 2;
+    const countMissinValues = arr.filter(v => v === "M");
 
-    if (mean < lowerThreshold) mean = lowerThreshold;
-    if (mean > upperThreshold) mean = upperThreshold;
-
+    let min, max, mean;
     let p = {};
+    if (countMissinValues.length < 5) {
+      const filtered = arr.filter(v => v !== "M");
+      min = Math.min(...filtered);
+      max = Math.max(...filtered);
+      mean = (min + max) / 2;
 
-    if (!isNaN(mean)) {
+      if (mean < lowerThreshold) mean = lowerThreshold;
+      if (mean > upperThreshold) mean = upperThreshold;
+
       // accumulation from Jannuary 1st
       cdd += mean - lowerThreshold;
 
-      // start accumulation from March 1st
-
+      // start accumulation from March 1st only
       if (i >= march1Idx) {
         cddFromMarch1 += mean - lowerThreshold;
         percentFlight =
@@ -55,9 +57,9 @@ export default (cleanedData, asJson) => {
       }
 
       p.date = dates[i];
-      p.cdd = Number(cdd.toFixed(1));
-      p.cddFromMarch1 = Number(cddFromMarch1.toFixed(1));
-      p.percentFlight = Number(parseFloat(percentFlight).toFixed(1));
+      p.cdd = cdd.toFixed(1);
+      p.cddFromMarch1 = cddFromMarch1.toFixed(1);
+      p.percentFlight = percentFlight.toFixed(1);
     } else {
       missingDays.push(dates[i]);
       p.date = dates[i];

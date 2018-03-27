@@ -6,7 +6,7 @@ import axios from "axios";
 import { idAdjustment, vXDef } from "../utils/utils";
 
 // date-fns
-import { format, startOfYear, isSameYear, addDays } from "date-fns";
+import { format, startOfYear, addDays } from "date-fns";
 
 // fetch
 import fetchData from "../utils/fetchData";
@@ -122,24 +122,24 @@ export default class ParamsStore {
     };
   }
 
-  get edate() {
-    if (isSameYear(new Date(), new Date(this.dateOfInterest))) {
-      // if current year fetch data up to today
-      return format(new Date(), "YYYY-MM-DD");
-    } else {
-      // if NOT current year fetch data up to date of interest + 5 days
-      // +5 days to make the table the same as when current year
-      return format(addDays(this.dateOfInterest, 5), "YYYY-MM-DD");
-    }
-  }
+  // get edate() {
+  //   if (isSameYear(new Date(), new Date(this.dateOfInterest))) {
+  //     // if current year fetch data up to today
+  //     return format(new Date(), "YYYY-MM-DD");
+  //   } else {
+  //     // if NOT current year fetch data up to date of interest + 5 days
+  //     // +5 days to make the table the same as when current year
+  //     return format(addDays(this.dateOfInterest, 5), "YYYY-MM-DD");
+  //   }
+  // }
 
   get params() {
-    const { station, edate, dateOfInterest } = this;
+    const { station, dateOfInterest } = this;
     if (station) {
       return {
         sid: `${idAdjustment(station)} ${station.network}`,
         sdate: format(startOfYear(dateOfInterest), "YYYY-MM-DD"),
-        edate,
+        edate: format(addDays(dateOfInterest, 5), "YYYY-MM-DD"),
         elems: [
           {
             vX: vXDef[station.network]["temp"],
@@ -175,14 +175,13 @@ export default class ParamsStore {
       this.asJson
     );
 
-
     this.data = results;
     this.missingDays = missingDays;
     this.isLoading = false;
   };
 
   get dataForTable() {
-    return this.data.slice(-8)
+    return this.data.slice(-8);
   }
 
   // date of interest flight completion
@@ -205,7 +204,6 @@ decorate(ParamsStore, {
   filteredStationList: computed,
   dateOfInterest: observable,
   setDateOfInterest: action,
-  edate: computed,
   asJson: computed,
   readFromLocalstorage: action,
   params: computed,

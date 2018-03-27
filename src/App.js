@@ -21,7 +21,6 @@ import GDDTable from "./components/GDDTable";
 import USMap from "./components/USMap";
 // import Graph from "./components/Graph";
 import Footer from "./components/Footer";
-import Acknowledgment from "./components/Acknowledgment";
 
 const drawerWidth = 250;
 const styles = theme => ({

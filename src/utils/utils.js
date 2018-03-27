@@ -125,7 +125,7 @@ export const idAdjustment = station => {
 export const avgTwoStringNumbers = (a, b) => {
   const aNum = parseFloat(a);
   const bNum = parseFloat(b);
-  return ((aNum + bNum) / 2).toPrecision(2).toString();
+  return ((aNum + bNum) / 2).toFixed(1);
 };
 
 // export const replaceNonConsecutiveMissingValues = arr => {
@@ -150,7 +150,6 @@ const weightedMean = res => {
   const secondM = ((arr[0] + arr[3] + arr[3]) / 3).toPrecision(2);
   return [firstM, secondM];
 };
-
 
 export const averageMissingValues = d => {
   // console.log(d);
@@ -193,7 +192,7 @@ export const averageMissingValues = d => {
 
 export const flatten = arr => Array.prototype.concat(...arr);
 
-export const unflatted = array => {
+export const unflatten = array => {
   let res = [];
   while (array.length > 0) res.push(array.splice(0, 24));
   return res;
@@ -210,8 +209,8 @@ export const average = data => {
 };
 
 // Convert Fahrenheit to Celcius
-export const fahrenheitToCelcius = data => {
-  return ((data - 32) * 5 / 9).toPrecision(2).toString();
+export const fahrenheitToCelcius = t => {
+  return ((t - 32) * 5 / 9).toFixed(1);
 };
 
 // convert time in local standard time to local time (based on time zone and dst)
