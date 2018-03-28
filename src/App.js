@@ -53,11 +53,10 @@ const styles = theme => ({
     }
   },
   content: {
+    flex: 1,
     width: "100%",
     display: "flex",
-    minHeight: "100%",
     flexDirection: "column",
-
     backgroundColor: "#E7ECF0",
     paddingLeft: theme.spacing.unit * 1.5,
     paddingRight: theme.spacing.unit * 1.5,

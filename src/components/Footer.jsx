@@ -11,11 +11,11 @@ const styles = theme => ({
   ciccio: {
     width: "100%",
     flex: "none",
-    marginTop: theme.spacing.unit * 4,
+    marginTop: theme.spacing.unit * 8,
     display: "flex",
     justifyContent: "space-around",
     alignItems: "center",
-    height: "7vh",
+    height: "10vh",
     borderTop: "1px solid #E7E7E7"
   },
   button: {
