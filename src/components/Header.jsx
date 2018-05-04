@@ -67,7 +67,7 @@ class Header extends Component {
               },
               text: {
                 fill: indigo[500],
-                fontSize: 26,
+                fontSize: 24,
                 fontWeight: 700
               }
             }}

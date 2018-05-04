@@ -42,24 +42,31 @@ export default (cleanedData, asJson) => {
       max = Math.max(...filtered);
       mean = (min + max) / 2;
 
-      if (mean < lowerThreshold) mean = lowerThreshold;
-      if (mean > upperThreshold) mean = upperThreshold;
+      if (isNaN(mean)) {
+        p.date = dates[i];
+        p.cdd = "N/A";
+        p.cddFromMarch1 = "N/A";
+        p.percentFlight = "N/A";
+      } else {
+        if (mean < lowerThreshold) mean = lowerThreshold;
+        if (mean > upperThreshold) mean = upperThreshold;
 
-      // accumulation from Jannuary 1st
-      cdd += mean - lowerThreshold;
+        // accumulation from Jannuary 1st
+        cdd += mean - lowerThreshold;
 
-      // start accumulation from March 1st only
-      if (i >= march1Idx) {
-        cddFromMarch1 += mean - lowerThreshold;
-        percentFlight =
-          100 /
-          (1 + Math.exp(-1 * ((Math.log(cddFromMarch1) - 7.315) / 0.044)));
+        // start accumulation from March 1st only
+        if (i >= march1Idx) {
+          cddFromMarch1 += mean - lowerThreshold;
+          percentFlight =
+            100 /
+            (1 + Math.exp(-1 * ((Math.log(cddFromMarch1) - 7.315) / 0.044)));
+        }
+
+        p.date = dates[i];
+        p.cdd = cdd.toFixed(1);
+        p.cddFromMarch1 = cddFromMarch1.toFixed(1);
+        p.percentFlight = percentFlight.toFixed(1);
       }
-
-      p.date = dates[i];
-      p.cdd = cdd.toFixed(1);
-      p.cddFromMarch1 = cddFromMarch1.toFixed(1);
-      p.percentFlight = percentFlight.toFixed(1);
     } else {
       missingDays.push(dates[i]);
       p.date = dates[i];
@@ -70,6 +77,6 @@ export default (cleanedData, asJson) => {
     results.push(p);
   });
 
-  // console.log({ results, missingDays });
+  console.log({ results, missingDays });
   return { results, missingDays };
 };

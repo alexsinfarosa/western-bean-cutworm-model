@@ -169,6 +169,7 @@ class LeftPanel extends Component {
               }}
               format="MMMM Do, YYYY"
               disableFuture
+              showTodayButton
               InputProps={{
                 endAdornment: (
                   <InputAdornment
