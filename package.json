@@ -2,7 +2,7 @@
   "name": "western-bean-cutworm",
   "version": "0.1.0",
   "author": "alexsinfarosa <as898@cornell.edu>",
-  "homepage": "https://alexsinfarosa.github.io/western-bean-cutworm/",
+  "homepage": "http://wbc.newa.cornell.edu/",
   "description": "NEWA Western Bean Cutworm",
   "private": true,
   "dependencies": {
