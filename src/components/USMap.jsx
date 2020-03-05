@@ -1,20 +1,18 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
-import stationSel from "../assets/stationSel.png";
 import planeSel from "../assets/planeSel.png";
 
 // map
-import { Map, TileLayer, Marker, Tooltip, GeoJSON } from "react-leaflet";
+import { Map, TileLayer, Marker, Tooltip } from "react-leaflet";
 import L from "leaflet";
 
 // utils
 import { matchIconsToStations } from "../utils/utils";
 
 // material-ui
-import { withStyles } from "material-ui/styles";
+import { withStyles } from "@material-ui/core/styles";
 import withRoot from "../withRoot";
-import Paper from "material-ui/Paper";
-import green from "material-ui/colors/green";
+import Paper from "@material-ui/core/Paper";
 
 // styles
 const styles = theme => ({
@@ -26,33 +24,8 @@ const styles = theme => ({
 });
 
 class USMap extends Component {
-  state = {
-    geojson: {}
-  };
-
-  componentDidMount() {
-    const leafletMap = this.leafletMap.leafletElement;
-    leafletMap.on("zoomend", () => {
-      console.log("Current zoom level -> ", leafletMap.getZoom());
-    });
-
-    const { postalCode } = this.props.rootStore.paramsStore;
-    if (postalCode !== "ALL") {
-      const url = `${
-        window.location.protocol
-      }//data.rcc-acis.org/General/state?state=${postalCode}&meta=name,geojson`;
-
-      fetch(url)
-        .then(res => res.json())
-        .then(res => {
-          const geojson = res.meta[0].geojson;
-          this.setState({ geojson });
-        });
-    }
-  }
-
   handleStateStationFromMap = station => {
-    const { setStateStationFromMap } = this.props.rootStore.paramsStore;
+    const { setStateStationFromMap } = this.props.appStore.paramsStore;
     setStateStationFromMap(station);
     this.props.toggleModal();
     this.props.closeDrawer();
@@ -60,7 +33,7 @@ class USMap extends Component {
 
   render() {
     const { classes } = this.props;
-    const { state, stations, station } = this.props.rootStore.paramsStore;
+    const { state, stations, station } = this.props.appStore.paramsStore;
 
     const stationsWithMatchedIcons = stations.map(station => {
       station["icon"] = matchIconsToStations(station, state);
@@ -75,7 +48,7 @@ class USMap extends Component {
         icon={
           station && stn.id === station.id
             ? L.icon({
-                iconUrl: stn.network === "icao" ? planeSel : stationSel,
+                iconUrl: stn.network === "icao" ? planeSel : stn.icon,
                 iconSize: [14, 14]
               })
             : L.icon({
@@ -102,18 +75,8 @@ class USMap extends Component {
           ref={m => (this.leafletMap = m)}
           scrollWheelZoom={false}
         >
-          <TileLayer url="http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png" />
+          <TileLayer url="http://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}" />
           {MarkerList}
-          {this.state.geojson.coordinates && (
-            <GeoJSON
-              data={this.state.geojson}
-              style={{
-                color: green[400],
-                weight: 1
-                // opacity: 0.65
-              }}
-            />
-          )}
         </Map>
       </Paper>
     );
@@ -121,5 +84,5 @@ class USMap extends Component {
 }
 
 export default withRoot(
-  withStyles(styles)(inject("rootStore")(observer(USMap)))
+  withStyles(styles)(inject("appStore")(observer(USMap)))
 );

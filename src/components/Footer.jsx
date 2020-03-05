@@ -1,27 +1,31 @@
 import React, { Component, Fragment } from "react";
 import { inject, observer } from "mobx-react";
-import { withStyles } from "material-ui/styles";
-import withRoot from "../withRoot";
-import Typography from "material-ui/Typography";
-import { Modal, Button } from "material-ui";
 
+import { withStyles } from "@material-ui/core/styles";
+import withRoot from "../withRoot";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import Modal from "@material-ui/core/Modal";
+import Hidden from "@material-ui/core/Hidden";
+// import Divider from "@material-ui/core/Divider";
 import Acknowledgment from "./Acknowledgment";
 
 const styles = theme => ({
-  ciccio: {
-    width: "100%",
-    flex: "none",
-    marginTop: theme.spacing.unit * 8,
+  footer: {
     display: "flex",
-    justifyContent: "space-around",
+    justifyContent: "center",
     alignItems: "center",
-    height: "10vh",
+    height: 150,
     borderTop: "1px solid #E7E7E7"
   },
   button: {
     color: "#6C6E70",
     fontSize: "0.7rem",
     letterSpacing: 1
+  },
+  divider: {
+    width: "70%",
+    margin: "0 auto"
   }
 });
 class Footer extends Component {
@@ -37,20 +41,54 @@ class Footer extends Component {
     const { classes } = this.props;
     return (
       <Fragment>
-        <Typography variant="caption" className={classes.ciccio}>
-          <Button className={classes.button} onClick={this.toggleModal}>
-            ACKNOWLEDGMENT
-          </Button>
-          <Button className={classes.button}>MORE INFO</Button>
-          <Button
-            className={classes.button}
-            href="http://newa.cornell.edu/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            NEWA
-          </Button>
-        </Typography>
+        <Hidden only="xs">
+          <div className={classes.footer}>
+            <Typography variant="caption" style={{ margin: 0, padding: 0 }}>
+              <Button className={classes.button}>MORE INFO</Button>
+              <span> | </span>
+              <Button className={classes.button} onClick={this.toggleModal}>
+                ACKNOWLEDGMENT
+              </Button>
+              <span> | </span>
+              <Button
+                className={classes.button}
+                href="http://newa.cornell.edu/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                NEWA
+              </Button>
+            </Typography>
+          </div>
+        </Hidden>
+
+        <Hidden smUp>
+          <div className={classes.footer} style={{ flexDirection: "column" }}>
+            <Typography
+              variant="caption"
+              gutterBottom
+              align="center"
+              style={{ marginTop: 24 }}
+            >
+              <Button className={classes.button}>MORE INFO</Button>
+            </Typography>
+            <Typography variant="caption" gutterBottom align="center">
+              <Button className={classes.button} onClick={this.toggleModal}>
+                ACKNOWLEDGMENT
+              </Button>
+            </Typography>
+            <Typography variant="caption" gutterBottom align="center">
+              <Button
+                className={classes.button}
+                href="http://newa.cornell.edu/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                NEWA
+              </Button>
+            </Typography>
+          </div>
+        </Hidden>
 
         {/* Acknowledgment */}
         <Modal
@@ -83,5 +121,5 @@ class Footer extends Component {
 }
 
 export default withRoot(
-  withStyles(styles)(inject("rootStore")(observer(Footer)))
+  withStyles(styles)(inject("appStore")(observer(Footer)))
 );

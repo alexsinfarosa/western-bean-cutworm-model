@@ -1,7 +1,11 @@
-import plane from "../assets/plane.png";
-import planeGrey from "../assets/planeGrey.png";
-import iconStation from "../assets/station.png";
-import stationGrey from "../assets/stationGrey.png";
+import {
+  isBefore,
+  addHours,
+  isEqual,
+  startOfDay,
+  endOfDay,
+  getHours
+} from "date-fns/esm";
 
 // MAP ---------------------------------------------------------
 export const matchIconsToStations = (station, state) => {
@@ -9,21 +13,21 @@ export const matchIconsToStations = (station, state) => {
   const { network } = station;
   const { postalCode } = state;
 
-  const newa = iconStation;
-  const newaGray = stationGrey;
-  const airport = plane;
-  const airportGray = planeGrey;
+  const newa = `${protocol}//newa2.nrcc.cornell.edu/gifs/newa_small.png`;
+  const newaGray = `${protocol}//newa2.nrcc.cornell.edu/gifs/newa_smallGray.png`;
+  const airport = `${protocol}//newa2.nrcc.cornell.edu/gifs/airport.png`;
+  const airportGray = `${protocol}//newa2.nrcc.cornell.edu/gifs/airportGray.png`;
   const culog = `${protocol}//newa2.nrcc.cornell.edu/gifs/culog.png`;
   const culogGray = `${protocol}//newa2.nrcc.cornell.edu/gifs/culogGray.png`;
 
   if (
     network === "newa" ||
-    network === "miwx" ||
-    network === "ucc" ||
-    network === "oardc" ||
-    network === "nwon" ||
     network === "njwx" ||
+    network === "miwx" ||
+    network === "oardc" ||
     network === "nysm" ||
+    network === "nwon" ||
+    network === "ucc" ||
     ((network === "cu_log" || network === "culog") && station.state !== "NY")
   ) {
     return station.state === postalCode || postalCode === "ALL"
@@ -196,4 +200,63 @@ export const unflatten = array => {
 };
 
 // Convert Fahrenheit to Celcius
-export const fahrenheitToCelcius = t => (((t - 32) * 5) / 9).toFixed(1);
+export const fahrenheitToCelcius = (t, missing) =>
+  t === missing ? t : (((t - 32) * 5) / 9).toFixed(1);
+
+// Convert Celcius to Fahrenheit
+export const celciusToFahrenheit = (t, missing) =>
+  t === missing ? t : (t * (9 / 5) + 32).toFixed(1);
+
+// Returns average of all the values in array
+export const average = data => {
+  // handling the case for T and W
+  if (data.length === 0) return 0;
+
+  //  calculating average
+  let results = data.map(e => parseFloat(e));
+  return Math.round(results.reduce((acc, val) => acc + val, 0) / data.length);
+};
+
+export const dailyToHourlyDatesLST = (sdate, edate) => {
+  let startDay = sdate;
+  let endDay = edate;
+
+  let results = [];
+  results.push(startDay);
+
+  while (isBefore(startDay, endDay)) {
+    startDay = addHours(startDay, 1);
+    if (isBefore(startDay, endDay) || isEqual(startDay, endDay)) {
+      results.push(startDay);
+    }
+  }
+  return results;
+};
+
+export const dailyToHourlyDates = date => {
+  const numOfHours = dailyToHourlyDatesLST(startOfDay(date), endOfDay(date));
+  const hoursArr = numOfHours.map(h => getHours(h));
+  let results = hoursArr.map(hour => {
+    if (hour >= 0 && hour <= 9) hour = `0${hour}`;
+    return `${date} ${hour}:00`;
+  });
+  // console.log(results);
+  return results;
+};
+
+// This formula is used to calculate the growing degree day
+export const baskervilleEmin = (min, max, base) => {
+  if (min >= base) {
+    const avg = (max + min) / 2;
+    return avg - base;
+  } else if (max <= base) {
+    return 0;
+  } else {
+    const avg = (max + min) / 2;
+    const amt = (max - min) / 2;
+    const t1 = Math.sin((base - avg) / amt);
+    return avg < 0
+      ? 0
+      : (amt * Math.cos(t1) - (base - avg) * (3.14 / 2 - t1)) / 3.14;
+  }
+};

@@ -1,64 +1,73 @@
 import { decorate, observable, computed, action, reaction, when } from "mobx";
-import states from "../assets/states.json";
+import { allStates } from "../assets/states";
 import axios from "axios";
 
 // utils
 import { idAdjustment, vXDef } from "../utils/utils";
 
 // date-fns
-import { format, startOfYear, addDays } from "date-fns";
+import {
+  isAfter,
+  isBefore,
+  format,
+  getYear,
+  startOfHour,
+  addDays,
+  isSameYear
+} from "date-fns/esm";
 
 // fetch
 import fetchData from "../utils/fetchData";
-import cleanFetchedData from "../utils/cleanFetchedData";
-import currentModel from "../utils/currentModel";
+// import currentModel from "../utils/currentModel";
 
 // const
-const url = `${
-  window.location.protocol
-}//newa2.nrcc.cornell.edu/newaUtil/stateStationList/all`;
+const url = `${window.location.protocol}//newa2.nrcc.cornell.edu/newaUtil/stateStationList/all`;
 
 export default class ParamsStore {
   constructor() {
-    when(() => this.stations.length === 0, () => this.loadStations());
+    when(
+      () => this.stations.length === 0,
+      () => this.loadStations()
+    );
 
     when(
       () => !this.isLoading,
       () => {
         this.readFromLocalstorage();
-        reaction(() => this.asJson, json => this.writeToLocalstorage(json));
+        reaction(
+          () => this.asJson,
+          json => this.writeToLocalstorage(json)
+        );
       }
     );
 
     reaction(
       () => this.asJson,
-      () => (this.stationID === "" ? null : this.setData(this.params))
+      () =>
+        this.stationID === "" || !this.dateOfInterest
+          ? null
+          : this.loadData(this.params)
     );
   }
 
+  // logic --------------------------------------------------------------------------------
   isLoading = false;
 
-  //   state
+  //   state ------------------------------------------------------------------------------
   postalCode = "ALL";
   setPostalCode = e => {
     this.postalCode = e.target.value;
     this.stationID = "";
   };
   get state() {
-    return states.find(state => state.postalCode === this.postalCode);
-  }
-  get states() {
-    return states;
+    return allStates.find(state => state.postalCode === this.postalCode);
   }
 
-  //   station
+  //   station -----------------------------------------------------------------------------
   stationID = "";
   setStationID = e => {
     this.stationID = e.target.value;
-    const station = this.stations.find(
-      station => station.id === e.target.value
-    );
-    this.postalCode = station.state;
+    this.postalCode = this.station.state;
   };
   get station() {
     return this.stations.find(station => station.id === this.stationID);
@@ -81,18 +90,34 @@ export default class ParamsStore {
   }
 
   get filteredStationList() {
-    if (this.postalCode === "ALL") {
-      return this.stations;
-    } else {
-      return this.stations.filter(station => station.state === this.postalCode);
-    }
+    return this.postalCode === "ALL"
+      ? this.stations
+      : this.stations.filter(station => station.state === this.postalCode);
   }
 
-  //   date of interest
-  dateOfInterest = new Date();
-  setDateOfInterest = d => (this.dateOfInterest = d);
+  setStateStationFromMap = station => {
+    this.postalCode = station.state;
+    this.stationID = station.id;
+  };
 
-  //   localstorage
+  //   date of interest -------------------------------------------------------------------
+  dateOfInterest = new Date();
+  get sdate() {
+    return `${getYear(this.dateOfInterest) - 1}-12-31`;
+  }
+  setDateOfInterest = d => {
+    this.dateOfInterest = d;
+
+    if (this.bioFix) {
+      if (getYear(this.dateOfInterest) !== getYear(this.bioFix))
+        this.setBioFix(null);
+    }
+  };
+
+  bioFix = null;
+  setBioFix = d => (this.bioFix = d);
+
+  //   localstorage ------------------------------------------------------------------------
   writeToLocalstorage = json => {
     localStorage.setItem(
       "newa-cranberry-fruitworm-model",
@@ -106,14 +131,16 @@ export default class ParamsStore {
     );
     if (localStorageRef) {
       const params = JSON.parse(localStorageRef);
+
       if (Object.keys(params).length !== 0) {
         this.postalCode = params.postalCode;
         this.stationID = params.stationID;
-        this.dateOfInterest = params.dateOfInterest;
+        this.dateOfInterest = new Date();
       }
     }
   };
 
+  // params ----------------------------------------------------------------------------------
   get asJson() {
     return {
       postalCode: this.postalCode,
@@ -122,74 +149,47 @@ export default class ParamsStore {
     };
   }
 
-  // get edate() {
-  //   if (isSameYear(new Date(), new Date(this.dateOfInterest))) {
-  //     // if current year fetch data up to today
-  //     return format(new Date(), "YYYY-MM-DD");
-  //   } else {
-  //     // if NOT current year fetch data up to date of interest + 5 days
-  //     // +5 days to make the table the same as when current year
-  //     return format(addDays(this.dateOfInterest, 5), "YYYY-MM-DD");
-  //   }
-  // }
-
   get params() {
-    const { station, dateOfInterest } = this;
-
-    if (station) {
+    if (this.station) {
       return {
-        sid: `${idAdjustment(station)} ${station.network}`,
-        sdate: format(startOfYear(dateOfInterest), "YYYY-MM-DD"),
-        edate: format(addDays(dateOfInterest, 5), "YYYY-MM-DD"),
-        elems: [
-          {
-            vX: vXDef[station.network]["temp"],
-            units: "degreeC",
-            prec: 1
-          }
-        ],
-        meta: "tzo"
+        sid: `${idAdjustment(this.station)} ${this.station.network}`,
+        sdate: this.sdate,
+        edate: format(addDays(this.dateOfInterest, 5), "YYYY-MM-DD"),
+        elems: [{ vX: vXDef[this.station.network]["temp"], prec: 1 }],
+        meta: "tzo",
+        janFirst: `${getYear(this.dateOfInterest)}-01-01 00:00`,
+        dateOfInterest: format(
+          startOfHour(this.dateOfInterest),
+          "YYYY-MM-DD HH:00"
+        ),
+        isThisYear: isSameYear(new Date(), this.dateOfInterest)
       };
     }
   }
 
-  setStateStationFromMap = station => {
-    this.postalCode = station.state;
-    this.stationID = station.id;
-  };
+  get isSeason() {
+    return (
+      isAfter(
+        this.dateOfInterest,
+        new Date(`${getYear(this.dateOfInterest)}-03-01`)
+      ) &&
+      isBefore(
+        this.dateOfInterest,
+        new Date(`${getYear(this.dateOfInterest)}-09-01`)
+      )
+    );
+  }
 
+  // data model --------------------------------------------------------------------------------
   data = [];
   missingDays = [];
-  setData = async params => {
-    // console.log(params);
+  loadData = params => {
+    this.data = [];
     this.isLoading = true;
-
     // fetching data
-    const acisData = await fetchData(params).then(res => res);
-
-    // clean and replacements
-    const cleanedData = await cleanFetchedData(acisData, this.asJson);
-
-    // transform data based on current model
-    const { results, missingDays } = await currentModel(
-      cleanedData,
-      this.asJson
-    );
-
-    this.data = results;
-    this.missingDays = missingDays;
+    fetchData(params).then(res => (this.data = res));
     this.isLoading = false;
   };
-
-  get dataForTable() {
-    return this.data.slice(-8);
-  }
-
-  // date of interest flight completion
-  // to display in the circle
-  get doiFlightCompletion() {
-    return this.dataForTable[2].percentFlight;
-  }
 }
 
 decorate(ParamsStore, {
@@ -204,6 +204,9 @@ decorate(ParamsStore, {
   setStations: action,
   filteredStationList: computed,
   dateOfInterest: observable,
+  bioFix: observable,
+  setBioFix: action,
+  sdate: computed,
   setDateOfInterest: action,
   asJson: computed,
   readFromLocalstorage: action,
@@ -212,5 +215,5 @@ decorate(ParamsStore, {
   data: observable,
   missingDays: observable,
   setData: action,
-  dataForTable: computed
+  isSeason: computed
 });

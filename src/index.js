@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App";
+import App from "./components/App";
 import registerServiceWorker from "./registerServiceWorker";
 
 // material-ui picker
@@ -11,12 +11,12 @@ import MuiPickersUtilsProvider from "material-ui-pickers/utils/MuiPickersUtilsPr
 
 // Mobx
 import { Provider } from "mobx-react";
-import RootStore from "./stores/RootStore";
+import AppStore from "./stores/AppStore";
 const fetcher = url => window.fetch(url).then(response => response.json());
-const rootStore = new RootStore(fetcher);
+const appStore = new AppStore(fetcher);
 
 ReactDOM.render(
-  <Provider rootStore={rootStore}>
+  <Provider appStore={appStore}>
     <MuiPickersUtilsProvider utils={DateFnsUtils} locale={enLocale}>
       <App />
     </MuiPickersUtilsProvider>

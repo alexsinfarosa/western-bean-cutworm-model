@@ -1,24 +1,25 @@
 import React, { Component, Fragment } from "react";
 import { inject, observer } from "mobx-react";
 
-import { withStyles } from "material-ui/styles";
+import { withStyles } from "@material-ui/core/styles";
 import withRoot from "../withRoot";
 
-import { InputLabel } from "material-ui/Input";
-import { MenuItem } from "material-ui/Menu";
-import { FormControl } from "material-ui/Form";
-import {
-  Select,
-  IconButton,
-  Button,
-  Typography,
-  Icon,
-  InputAdornment
-} from "material-ui";
-import PlaceIcon from "material-ui-icons/Place";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
+import NativeSelect from "@material-ui/core/NativeSelect";
+import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import Icon from "@material-ui/core/Icon";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import PlaceIcon from "@material-ui/icons/Place";
+import Input from "@material-ui/core/Input";
 
 // Date picker
 import DatePicker from "material-ui-pickers/DatePicker";
+
+// states
+import { allStates } from "../assets/states";
 
 const styles = theme => ({
   root: {
@@ -45,8 +46,8 @@ const styles = theme => ({
   center: {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
-    // borderBottom: "1px solid #949494"
+    alignItems: "center",
+    textTransform: "uppercase"
   },
   link: {
     color: "#a52c25",
@@ -54,7 +55,32 @@ const styles = theme => ({
   },
   iconMap: {
     margin: "0 auto",
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing.unit * 2,
+    borderRadius: 10
+  },
+  rightIcon: {
+    marginLeft: theme.spacing.unit
+  },
+  styledBtn: {
+    minWidth: 120,
+    width: "80%",
+    margin: "0px auto",
+    marginTop: 2,
+    textAlign: "center",
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "baseline"
+  },
+  riskLevel: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 100,
+    height: 25,
+    border: "1px solid #eee",
+    borderRadius: 8,
+    marginRight: 10,
+    marginBottom: 10
   }
 });
 
@@ -62,28 +88,27 @@ class LeftPanel extends Component {
   render() {
     const { classes } = this.props;
     const {
-      states,
       postalCode,
       setPostalCode,
+      filteredStationList,
       stationID,
       setStationID,
-      filteredStationList,
       dateOfInterest,
       setDateOfInterest
-    } = this.props.rootStore.paramsStore;
+    } = this.props.appStore.paramsStore;
 
-    const stateList = states.map(state => (
-      <MenuItem key={state.postalCode} value={state.postalCode}>
+    const stateList = allStates.map(state => (
+      <option key={state.postalCode} value={state.postalCode}>
         {state.name}
-      </MenuItem>
+      </option>
     ));
 
     let stationList = [];
     if (filteredStationList) {
-      stationList = filteredStationList.map(station => (
-        <MenuItem key={station.id} value={station.id}>
-          {station.name}
-        </MenuItem>
+      stationList = filteredStationList.map(stn => (
+        <option key={stn.id} value={stn.id}>
+          {stn.name}
+        </option>
       ));
     }
 
@@ -97,43 +122,33 @@ class LeftPanel extends Component {
               target="_blank"
               rel="noopener noreferrer"
             >
-              CORNELL UNIVERSITY
+              Cornell University
             </a>
           </Typography>
         </div>
 
         <Button
-          variant="fab"
-          mini
+          variant="raised"
           onClick={this.props.toggleModal}
           aria-label="map"
           color="primary"
           className={classes.iconMap}
         >
-          <PlaceIcon />
+          MAP <PlaceIcon className={classes.rightIcon} />
         </Button>
 
-        <form
-          className={classes.root}
-          autoComplete="off"
-          onSubmit={this.handleSubmit}
-        >
+        <form className={classes.root} noValidate autoComplete="off">
           {/* state */}
           <FormControl className={classes.formControl}>
             <InputLabel htmlFor="postalCode">State</InputLabel>
-
-            <Select
-              // style={{ marginTop: 10 }}
-              autoWidth={true}
+            <NativeSelect
               value={postalCode}
               onChange={setPostalCode}
-              inputProps={{
-                name: "postalCode",
-                id: "postalCode"
-              }}
+              input={<Input id="postalCode" />}
             >
+              <option value="" />
               {stateList}
-            </Select>
+            </NativeSelect>
           </FormControl>
 
           {/* station */}
@@ -141,23 +156,19 @@ class LeftPanel extends Component {
             <InputLabel htmlFor="stationID">
               Station ({stationList.length})
             </InputLabel>
-            <Select
-              autoWidth={true}
+            <NativeSelect
               value={stationID}
               onChange={e => {
                 setStationID(e);
                 this.props.closeDrawer();
               }}
-              inputProps={{
-                name: "stationID",
-                id: "stationID"
-              }}
+              input={<Input id="stationID" />}
             >
+              <option value="" />
               {stationList}
-            </Select>
+            </NativeSelect>
           </FormControl>
 
-          {/* date of interest */}
           <div className={classes.formControl}>
             <DatePicker
               style={{ width: "100%" }}
@@ -172,15 +183,8 @@ class LeftPanel extends Component {
               showTodayButton
               InputProps={{
                 endAdornment: (
-                  <InputAdornment
-                    position="end"
-                    style={{
-                      width: 30,
-                      display: "flex",
-                      justifyContent: "center"
-                    }}
-                  >
-                    <IconButton>
+                  <InputAdornment position="end">
+                    <IconButton style={{ marginRight: -10 }}>
                       <Icon>date_range</Icon>
                     </IconButton>
                   </InputAdornment>
@@ -195,5 +199,5 @@ class LeftPanel extends Component {
 }
 
 export default withRoot(
-  withStyles(styles)(inject("rootStore")(observer(LeftPanel)))
+  withStyles(styles)(inject("appStore")(observer(LeftPanel)))
 );

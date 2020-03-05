@@ -1,34 +1,30 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 
 // material-ui
 import withRoot from "../withRoot";
-import { withStyles } from "material-ui/styles";
-import Table, {
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow
-} from "material-ui/Table";
-import Paper from "material-ui/Paper";
-import { CircularProgress } from "material-ui/Progress";
-import Typography from "material-ui/Typography";
+import { withStyles } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 // date
-import { format, isSameDay } from "date-fns";
+import { format, isSameDay, differenceInDays } from "date-fns/esm";
+// import currentModel from "../utils/currentModel";
 
 // styles
 const styles = theme => ({
   root: {
     width: "100%",
-    maxWidth: 1200,
-    margin: "0 auto",
-    marginTop: theme.spacing.unit * 4,
-    borderRadius: 8
+    marginBottom: theme.spacing.unit * 4
   },
   table: {
     // minWidth: 700,
-    borderRadius: 4
   },
   isMobile: {
     [theme.breakpoints.down("md")]: {
@@ -53,23 +49,34 @@ const styles = theme => ({
     width: "100%",
     maxWidth: 1200,
     margin: "0 auto",
-    marginTop: theme.spacing.unit * 1
+    marginTop: theme.spacing.unit * 3
   }
 });
 
 class GDDTable extends Component {
+  timeColor = date => {
+    const formattedDate = format(date, "YYYY-MM-DD");
+    const formattedToday = format(new Date(), "YYYY-MM-DD");
+    if (isSameDay(formattedDate, formattedToday)) return;
+    if (differenceInDays(formattedDate, formattedToday) < 0) return "#0FA3B1";
+    if (differenceInDays(formattedDate, formattedToday) >= 0) return "#F9E04C";
+  };
+
   render() {
     const { classes } = this.props;
-    const {
-      dataForTable,
-      isLoading,
-      dateOfInterest,
-      missingDays
-    } = this.props.rootStore.paramsStore;
+    const { isLoading, dateOfInterest } = this.props.appStore.paramsStore;
+    const { dataForTable, missingDays } = this.props.appStore.currentModel;
 
     return (
-      <Fragment>
-        <Paper className={classes.root}>
+      <div className={classes.root}>
+        <Typography
+          variant="subheading"
+          gutterBottom
+          style={{ letterSpacing: 1 }}
+        >
+          PREDICTIONS
+        </Typography>
+        <Paper>
           {isLoading ? (
             <div
               style={{
@@ -85,11 +92,33 @@ class GDDTable extends Component {
             <Table className={classes.table}>
               <TableHead>
                 <TableRow>
-                  <TableCell className={classes.tableCell}>Date</TableCell>
-                  <TableCell className={classes.tableCell}>
+                  <TableCell
+                    className={classes.tableCell}
+                    rowSpan={2}
+                    colSpan={2}
+                    style={{
+                      textAlign: "center",
+                      margin: 0,
+                      padding: 0,
+                      borderRight: "1px solid #E0E0E0"
+                    }}
+                  >
+                    <div>DATE</div>
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      textAlign: "center",
+                      borderLeft: "1px solid #E0E0E0",
+                      borderRight: "1px solid #E0E0E0"
+                    }}
+                    // colSpan={4}
+                  >
                     Accumulation degree days (˚C)
                   </TableCell>
-                  <TableCell className={classes.tableCell}>
+                  <TableCell
+                    className={classes.isMobile}
+                    style={{ textAlign: "center" }}
+                  >
                     Flight completion (%)
                   </TableCell>
                 </TableRow>
@@ -97,34 +126,55 @@ class GDDTable extends Component {
               <TableBody>
                 {dataForTable.map(o => {
                   const isToday = isSameDay(new Date(dateOfInterest), o.date);
+                  const formattedDate = format(o.date, "YYYY-MM-DD");
+                  const formattedToday = format(new Date(), "YYYY-MM-DD");
                   return (
                     <TableRow hover key={o.date}>
                       <TableCell
                         className={classes.tableCell}
                         style={{
-                          fontSize: isToday ? "0.9rem" : null,
+                          margin: 0,
+                          padding: 0,
+                          width: 8,
+                          background: this.timeColor(o.date),
+                          borderBottom: "none",
+                          borderTop: "none"
+                        }}
+                      />
+                      <TableCell
+                        className={classes.tableCell}
+                        style={{
+                          fontSize: isToday ? "1.1rem" : null,
                           fontWeight: isToday ? 700 : null
                         }}
                       >
-                        {format(o.date, "MMMM Do")}
+                        {isSameDay(formattedDate, formattedToday)
+                          ? "Today"
+                          : format(o.date, "MMMM Do")}
                       </TableCell>
                       <TableCell
-                        style={{
-                          fontSize: isToday ? "0.9rem" : null,
-                          fontWeight: isToday ? 700 : null
-                        }}
                         className={classes.tableCell}
+                        style={{
+                          borderLeft: "1px solid #E0E0E0",
+                          fontSize: isToday ? "1.1rem" : null,
+                          fontWeight: isToday ? 700 : null,
+                          borderRight: "1px solid #E0E0E0"
+                        }}
+                        numeric
                       >
-                        {o.cddFromMarch1 === null ? "N/A" : o.cddFromMarch1}
+                        {o.cddMarchFirst}
                       </TableCell>
                       <TableCell
-                        style={{
-                          fontSize: isToday ? "0.9rem" : null,
-                          fontWeight: isToday ? 700 : null
-                        }}
                         className={classes.tableCell}
+                        style={{
+                          borderLeft: "1px solid #E0E0E0",
+                          fontSize: isToday ? "1.1rem" : null,
+                          fontWeight: isToday ? 700 : null,
+                          borderRight: "1px solid #E0E0E0"
+                        }}
+                        numeric
                       >
-                        {o.percentFlight === null ? "N/A" : o.percentFlight}
+                        {o.percentFlight}
                       </TableCell>
                     </TableRow>
                   );
@@ -133,29 +183,28 @@ class GDDTable extends Component {
             </Table>
           )}
         </Paper>
-
         {/* Missing Days */}
-        {missingDays.length !== 0 &&
-          !isLoading && (
-            <Typography variant="caption" className={classes.missingDays}>
-              {`(+${missingDays.length}) ${
-                missingDays.length === 1 ? "day" : "days"
-              } missing:
-                  `}
-              {missingDays.map((d, i) => {
-                if (i === missingDays.length - 1) {
-                  return <span key={d}>{format(d, "MMMM Do")}.</span>;
-                } else {
-                  return <span key={d}>{format(d, "MMMM Do")}, </span>;
-                }
-              })}
-            </Typography>
-          )}
-      </Fragment>
+        {missingDays.length !== 0 && !isLoading && (
+          <Typography variant="caption" className={classes.missingDays}>
+            <span style={{ color: "black" }}>{`(+${missingDays.length}) ${
+              missingDays.length === 1 ? "day" : "days"
+            } missing:
+                  `}</span>
+
+            {missingDays.map((d, i) => {
+              if (i === missingDays.length - 1) {
+                return <span key={d}>{format(d, "MMMM Do")}.</span>;
+              } else {
+                return <span key={d}>{format(d, "MMMM Do")}, </span>;
+              }
+            })}
+          </Typography>
+        )}
+      </div>
     );
   }
 }
 
 export default withRoot(
-  withStyles(styles)(inject("rootStore")(observer(GDDTable)))
+  withStyles(styles)(inject("appStore")(observer(GDDTable)))
 );

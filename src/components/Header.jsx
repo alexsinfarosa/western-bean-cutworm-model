@@ -4,10 +4,10 @@ import { inject, observer } from "mobx-react";
 import CircularProgressbar from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
-import Typography from "material-ui/Typography";
-import { withStyles } from "material-ui/styles";
+import Typography from "@material-ui/core/Typography";
+import { withStyles } from "@material-ui/core/styles";
 import withRoot from "../withRoot";
-import indigo from "material-ui/colors/indigo";
+import indigo from "@material-ui/core/colors/indigo";
 
 const styles = theme => ({
   root: {
