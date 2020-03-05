@@ -18,11 +18,12 @@ export const matchIconsToStations = (station, state) => {
 
   if (
     network === "newa" ||
-    network === "njwx" ||
     network === "miwx" ||
+    network === "ucc" ||
     network === "oardc" ||
-    network === "nysm" ||
     network === "nwon" ||
+    network === "njwx" ||
+    network === "nysm" ||
     ((network === "cu_log" || network === "culog") && station.state !== "NY")
   ) {
     return station.state === postalCode || postalCode === "ALL"
